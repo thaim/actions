@@ -24,7 +24,7 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: aquaproj/aqua-installer@e2d97f7b2c3d16fd0dc16ce06c3c4cf1aa5f4a14 # v4.0.0
+      - uses: aquaproj/aqua-installer@11dd79b4e498d471a9385aa9fb7f62bb5f52a73c # v4.0.4
         with:
           aqua_version: v2.45.1
       - name: Run ghalint
