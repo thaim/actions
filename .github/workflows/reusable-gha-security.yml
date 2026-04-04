@@ -2,7 +2,7 @@
 # Usage:
 #   jobs:
 #     security:
-#       uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v1
+#       uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v1.0.0
 #
 # Checks:
 #   - actionlint: Lints workflow YAML files
@@ -20,10 +20,13 @@ jobs:
   security-checks:
     name: GitHub Actions Security Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
       - uses: aquaproj/aqua-installer@11dd79b4e498d471a9385aa9fb7f62bb5f52a73c # v4.0.4
         with:
           aqua_version: v2.45.1

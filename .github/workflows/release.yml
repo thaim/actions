@@ -18,13 +18,3 @@ jobs:
       - uses: Songmu/tagpr@b3fb89424646b06c8aa460f50307c60b6a541425 # v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        id: tagpr
-      - name: Update major version tag
-        if: steps.tagpr.outputs.tag != ''
-        env:
-          TAG: ${{ steps.tagpr.outputs.tag }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          MAJOR=$(echo "$TAG" | cut -d. -f1)
-          git tag -fa "$MAJOR" -m "Release $TAG"
-          git push "https://github-actions:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" "$MAJOR" --force
