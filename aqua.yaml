@@ -5,3 +5,4 @@ registries:
     ref: v4.311.0 # renovate: depName=aquaproj/aqua-registry
 packages:
   - name: suzuki-shunsuke/ghalint@v1.5.5
+  - name: zizmorcore/zizmor@v1.23.1

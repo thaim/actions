@@ -7,6 +7,7 @@
 # Checks:
 #   - actionlint: Lints workflow YAML files
 #   - ghalint: Checks GitHub Actions security best practices
+#   - zizmor: Detects security vulnerabilities in GitHub Actions workflows
 name: Reusable GitHub Actions Security Checks
 
 on:
@@ -28,6 +29,8 @@ jobs:
           aqua_version: v2.45.1
       - name: Run ghalint
         run: ghalint run
+      - name: Run zizmor
+        run: zizmor --offline .
       - name: Run actionlint
         uses: docker://rhysd/actionlint:1.7.7@sha256:887a259a5a534f3c4f36cb02dca341673c6089431057242cdc931e9f133147e9
         with:
