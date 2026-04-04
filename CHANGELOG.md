@@ -1,5 +1,8 @@
 # Changelog
 
+## [v1.0.1](https://github.com/thaim/actions/compare/v1.0.0...v1.0.1) - 2026-04-04
+- fix: remove major version tag update and resolve ghalint violations by @thaim in https://github.com/thaim/actions/pull/10
+
 ## [v1.0.0](https://github.com/thaim/actions/commits/v1.0.0) - 2026-04-04
 - chore: improve reusable security workflow by @thaim in https://github.com/thaim/actions/pull/1
 - feat: introduce aqua and enhance security checks with ghalint and zizmor by @thaim in https://github.com/thaim/actions/pull/2
