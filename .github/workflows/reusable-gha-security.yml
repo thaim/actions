@@ -2,7 +2,7 @@
 # Usage:
 #   jobs:
 #     security:
-#       uses: thaim/actions/.github/workflows/reusable-gha-security.yml@main
+#       uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v1
 #
 # Checks:
 #   - actionlint: Lints workflow YAML files
