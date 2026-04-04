@@ -13,11 +13,6 @@ name: Reusable GitHub Actions Security Checks
 
 on:
   workflow_call:
-    inputs:
-      runs-on:
-        description: "Runner label"
-        type: string
-        default: "ubuntu-latest"
 
 permissions:
   contents: read
@@ -25,7 +20,7 @@ permissions:
 jobs:
   pinact-verify:
     name: Verify GitHub Actions are pinned
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
@@ -37,7 +32,7 @@ jobs:
 
   actionlint:
     name: Lint GitHub Actions workflow files
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
