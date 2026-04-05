@@ -1,6 +1,16 @@
 name: "Security Tools Check"
 description: "Run ghalint, actionlint, and zizmor security checks"
 
+inputs:
+  github_token:
+    description: "GitHub token for reviewdog to post PR comments"
+    required: false
+    default: ""
+  reporter:
+    description: "reviewdog reporter type"
+    required: false
+    default: "github-pr-review"
+
 runs:
   using: composite
   steps:
@@ -11,16 +21,37 @@ runs:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
     - name: Run ghalint
       shell: bash
-      run: ghalint run
+      run: |
+        if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
+          ghalint run 2>&1 | sed -nE 's/.*workflow_file_path="?([^ "]+)"?.* msg="?([^"]+)"?.*/\1:1:\2/p' | reviewdog -efm="%f:%l:%m" -name=ghalint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+        else
+          ghalint run
+        fi
       env:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
+        REPORTER: ${{ inputs.reporter }}
     - name: Run zizmor
       shell: bash
-      run: zizmor --offline .
+      run: |
+        if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
+          zizmor --offline --format=sarif . | reviewdog -f=sarif -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+        else
+          zizmor --offline .
+        fi
       env:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
+        REPORTER: ${{ inputs.reporter }}
     - name: Run actionlint
       shell: bash
-      run: actionlint -color
+      run: |
+        if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
+          actionlint | reviewdog -efm="%f:%l:%c: %m" -name=actionlint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+        else
+          actionlint -color
+        fi
       env:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
+        REPORTER: ${{ inputs.reporter }}
