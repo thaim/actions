@@ -1,0 +1,27 @@
+name: Labeler
+
+on:
+  pull_request_target:
+    types: [opened, edited]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: bcoe/conventional-release-labels@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          type_labels: |
+            {
+              "feat": "enhancement",
+              "fix": "bug",
+              "ci": "ci",
+              "docs": "documentation",
+              "refactor": "refactor",
+              "chore": "chore"
+            }
+          ignored_types: ""
