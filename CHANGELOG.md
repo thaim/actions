@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.2](https://github.com/thaim/actions/compare/v1.0.1...v1.0.2) - 2026-04-05
+- ci: add security CI workflow by @thaim in https://github.com/thaim/actions/pull/12
+- fix: resolve command not found when calling reusable security workflow by @thaim in https://github.com/thaim/actions/pull/14
+
 ## [v1.0.1](https://github.com/thaim/actions/compare/v1.0.0...v1.0.1) - 2026-04-04
 - fix: remove major version tag update and resolve ghalint violations by @thaim in https://github.com/thaim/actions/pull/10
 
