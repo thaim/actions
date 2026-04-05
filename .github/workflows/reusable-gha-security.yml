@@ -34,12 +34,27 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: thaim/actions/actions/run-ghalint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+      - id: ghalint
+        uses: thaim/actions/actions/run-ghalint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+        continue-on-error: true
         with:
           github_token: ${{ github.token }}
-      - uses: thaim/actions/actions/run-zizmor@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+      - id: zizmor
+        uses: thaim/actions/actions/run-zizmor@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+        continue-on-error: true
         with:
           github_token: ${{ github.token }}
-      - uses: thaim/actions/actions/run-actionlint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+      - id: actionlint
+        uses: thaim/actions/actions/run-actionlint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+        continue-on-error: true
         with:
           github_token: ${{ github.token }}
+      - name: Check results
+        if: always()
+        run: |
+          if [ "${{ steps.ghalint.outcome }}" = "failure" ] || \
+             [ "${{ steps.zizmor.outcome }}" = "failure" ] || \
+             [ "${{ steps.actionlint.outcome }}" = "failure" ]; then
+            echo "::error::One or more security checks failed"
+            exit 1
+          fi
