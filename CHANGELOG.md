@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.1.0](https://github.com/thaim/actions/compare/v1.0.2...v1.1.0) - 2026-04-05
+- feat: add reviewdog integration for PR inline comments by @thaim in https://github.com/thaim/actions/pull/15
+- refactor: split setup-security-tools into individual actions by @thaim in https://github.com/thaim/actions/pull/17
+
 ## [v1.0.2](https://github.com/thaim/actions/compare/v1.0.1...v1.0.2) - 2026-04-05
 - ci: add security CI workflow by @thaim in https://github.com/thaim/actions/pull/12
 - fix: resolve command not found when calling reusable security workflow by @thaim in https://github.com/thaim/actions/pull/14
