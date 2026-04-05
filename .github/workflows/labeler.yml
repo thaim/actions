@@ -24,4 +24,4 @@ jobs:
               "refactor": "refactor",
               "chore": "chore"
             }
-          ignored_types: ""
+          ignored_types: "[]"
