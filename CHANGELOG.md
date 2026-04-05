@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.2.0](https://github.com/thaim/actions/compare/v1.1.0...v1.2.0) - 2026-04-05
+### New Features & Bug Fixes
+- fix: avoid broken pipe error in zizmor action on push events by @thaim in https://github.com/thaim/actions/pull/20
+- feat: continue running all security checks even when one fails by @thaim in https://github.com/thaim/actions/pull/23
+### Internal Changes
+- docs: add README by @thaim in https://github.com/thaim/actions/pull/18
+- chore: update composite action refs to include zizmor fix by @thaim in https://github.com/thaim/actions/pull/21
+- ci: categorize release notes and add auto-labeling workflow by @thaim in https://github.com/thaim/actions/pull/22
+- ci: configure renovate to skip pending approval by @thaim in https://github.com/thaim/actions/pull/24
+- chore(deps): update actions/checkout action to v6 by @renovate[bot] in https://github.com/thaim/actions/pull/25
+- ci: ignore self-referencing dependency in renovate by @thaim in https://github.com/thaim/actions/pull/27
+- fix: correct tagpr version comment from v1 to v1.17.1 by @thaim in https://github.com/thaim/actions/pull/28
+- chore(deps): update songmu/tagpr action to v1.18.0 by @renovate[bot] in https://github.com/thaim/actions/pull/29
+
 ## [v1.1.0](https://github.com/thaim/actions/compare/v1.0.2...v1.1.0) - 2026-04-05
 - feat: add reviewdog integration for PR inline comments by @thaim in https://github.com/thaim/actions/pull/15
 - refactor: split setup-security-tools into individual actions by @thaim in https://github.com/thaim/actions/pull/17
