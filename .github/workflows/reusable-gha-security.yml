@@ -34,12 +34,12 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: thaim/actions/actions/run-ghalint@c1a2592cb0d28b300f51fbd9e878dbaf95e87661 # refactor/split-security-tools-action
+      - uses: thaim/actions/actions/run-ghalint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
         with:
           github_token: ${{ github.token }}
-      - uses: thaim/actions/actions/run-zizmor@c1a2592cb0d28b300f51fbd9e878dbaf95e87661 # refactor/split-security-tools-action
+      - uses: thaim/actions/actions/run-zizmor@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
         with:
           github_token: ${{ github.token }}
-      - uses: thaim/actions/actions/run-actionlint@c1a2592cb0d28b300f51fbd9e878dbaf95e87661 # refactor/split-security-tools-action
+      - uses: thaim/actions/actions/run-actionlint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
         with:
           github_token: ${{ github.token }}
