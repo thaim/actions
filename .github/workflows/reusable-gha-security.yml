@@ -8,6 +8,11 @@
 #   - actionlint: Lints workflow YAML files
 #   - ghalint: Checks GitHub Actions security best practices
 #   - zizmor: Detects security vulnerabilities in GitHub Actions workflows
+#
+# Note:
+#   This workflow uses thaim/actions/actions/setup-security-tools composite action
+#   with an absolute reference because reusable workflows resolve relative paths
+#   against the caller repository, not this repository.
 name: Reusable GitHub Actions Security Checks
 
 on:
@@ -27,12 +32,4 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: aquaproj/aqua-installer@11dd79b4e498d471a9385aa9fb7f62bb5f52a73c # v4.0.4
-        with:
-          aqua_version: v2.45.1
-      - name: Run ghalint
-        run: ghalint run
-      - name: Run zizmor
-        run: zizmor --offline .
-      - name: Run actionlint
-        run: actionlint -color
+      - uses: thaim/actions/actions/setup-security-tools@7b346d6d10227f8086ef6e9ca72116bfb83dbbce # setup-security-ci

@@ -1,0 +1,26 @@
+name: "Security Tools Check"
+description: "Run ghalint, actionlint, and zizmor security checks"
+
+runs:
+  using: composite
+  steps:
+    - uses: aquaproj/aqua-installer@11dd79b4e498d471a9385aa9fb7f62bb5f52a73c # v4.0.4
+      with:
+        aqua_version: v2.45.1
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+    - name: Run ghalint
+      shell: bash
+      run: ghalint run
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+    - name: Run zizmor
+      shell: bash
+      run: zizmor --offline .
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+    - name: Run actionlint
+      shell: bash
+      run: actionlint -color
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
