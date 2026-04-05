@@ -1,0 +1,7 @@
+---
+registries:
+  - type: standard
+    ref: v4.492.0
+packages:
+  - name: zizmorcore/zizmor@v1.23.1
+  - name: reviewdog/reviewdog@v0.20.3
