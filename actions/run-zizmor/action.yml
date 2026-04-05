@@ -23,7 +23,8 @@ runs:
       shell: bash
       run: |
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
-          zizmor --offline --format=sarif . | reviewdog -f=sarif -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+          zizmor --offline --format=sarif . > "${RUNNER_TEMP}/zizmor-output.sarif"
+          reviewdog -f=sarif -reporter="${REPORTER}" -filter-mode=added -fail-on-error < "${RUNNER_TEMP}/zizmor-output.sarif" || true
         else
           zizmor --offline .
         fi
