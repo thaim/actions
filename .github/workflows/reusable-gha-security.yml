@@ -32,4 +32,4 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: thaim/actions/actions/setup-security-tools@setup-security-ci
+      - uses: thaim/actions/actions/setup-security-tools@7b346d6d10227f8086ef6e9ca72116bfb83dbbce # setup-security-ci
