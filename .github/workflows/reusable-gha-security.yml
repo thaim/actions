@@ -10,9 +10,9 @@
 #   - zizmor: Detects security vulnerabilities in GitHub Actions workflows
 #
 # Note:
-#   This workflow uses thaim/actions/actions/setup-security-tools composite action
-#   with an absolute reference because reusable workflows resolve relative paths
-#   against the caller repository, not this repository.
+#   This workflow uses individual composite actions (run-ghalint, run-zizmor,
+#   run-actionlint) with absolute references because reusable workflows resolve
+#   relative paths against the caller repository, not this repository.
 name: Reusable GitHub Actions Security Checks
 
 on:
@@ -34,6 +34,12 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: thaim/actions/actions/setup-security-tools@7b346d6d10227f8086ef6e9ca72116bfb83dbbce # setup-security-ci
+      - uses: thaim/actions/actions/run-ghalint@c1a2592cb0d28b300f51fbd9e878dbaf95e87661 # refactor/split-security-tools-action
+        with:
+          github_token: ${{ github.token }}
+      - uses: thaim/actions/actions/run-zizmor@c1a2592cb0d28b300f51fbd9e878dbaf95e87661 # refactor/split-security-tools-action
+        with:
+          github_token: ${{ github.token }}
+      - uses: thaim/actions/actions/run-actionlint@c1a2592cb0d28b300f51fbd9e878dbaf95e87661 # refactor/split-security-tools-action
         with:
           github_token: ${{ github.token }}

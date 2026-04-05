@@ -1,0 +1,33 @@
+name: "Run ghalint"
+description: "Run ghalint with optional reviewdog integration"
+
+inputs:
+  github_token:
+    description: "GitHub token for reviewdog to post PR comments"
+    required: false
+    default: ""
+  reporter:
+    description: "reviewdog reporter type"
+    required: false
+    default: "github-pr-review"
+
+runs:
+  using: composite
+  steps:
+    - uses: aquaproj/aqua-installer@11dd79b4e498d471a9385aa9fb7f62bb5f52a73c # v4.0.4
+      with:
+        aqua_version: v2.45.1
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+    - name: Run ghalint
+      shell: bash
+      run: |
+        if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
+          ghalint run 2>&1 | sed -nE 's/.*workflow_file_path="?([^ "]+)"?.* msg="?([^"]+)"?.*/\1:1:\2/p' | reviewdog -efm="%f:%l:%m" -name=ghalint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+        else
+          ghalint run
+        fi
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
+        REPORTER: ${{ inputs.reporter }}
