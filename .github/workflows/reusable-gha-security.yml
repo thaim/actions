@@ -51,10 +51,14 @@ jobs:
           github_token: ${{ github.token }}
       - name: Check results
         if: always()
+        env:
+          GHALINT_OUTCOME: ${{ steps.ghalint.outcome }}
+          ZIZMOR_OUTCOME: ${{ steps.zizmor.outcome }}
+          ACTIONLINT_OUTCOME: ${{ steps.actionlint.outcome }}
         run: |
-          if [ "${{ steps.ghalint.outcome }}" = "failure" ] || \
-             [ "${{ steps.zizmor.outcome }}" = "failure" ] || \
-             [ "${{ steps.actionlint.outcome }}" = "failure" ]; then
+          if [ "$GHALINT_OUTCOME" = "failure" ] || \
+             [ "$ZIZMOR_OUTCOME" = "failure" ] || \
+             [ "$ACTIONLINT_OUTCOME" = "failure" ]; then
             echo "::error::One or more security checks failed"
             exit 1
           fi
