@@ -23,7 +23,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
-          ghalint run 2>&1 | sed -nE 's/.*workflow_file_path="?([^ "]+)"?.* msg="?([^"]+)"?.*/\1:1:\2/p' | reviewdog -efm="%f:%l:%m" -name=ghalint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+          ghalint run 2>&1 | tee "${RUNNER_TEMP}/ghalint-output.log" | sed -nE 's/.*workflow_file_path="?([^ "]+)"?.* msg="?([^"]+)"?.*/\1:1:\2/p' | reviewdog -efm="%f:%l:%m" -name=ghalint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
         else
           ghalint run
         fi
@@ -31,3 +31,10 @@ runs:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
         REPORTER: ${{ inputs.reporter }}
+    - name: Show ghalint output
+      if: failure()
+      shell: bash
+      run: |
+        if [ -s "${RUNNER_TEMP}/ghalint-output.log" ]; then
+          cat "${RUNNER_TEMP}/ghalint-output.log"
+        fi

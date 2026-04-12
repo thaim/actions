@@ -23,7 +23,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
-          actionlint | reviewdog -efm="%f:%l:%c: %m" -name=actionlint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+          actionlint | tee "${RUNNER_TEMP}/actionlint-output.log" | reviewdog -efm="%f:%l:%c: %m" -name=actionlint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
         else
           actionlint -color
         fi
@@ -31,3 +31,10 @@ runs:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
         REPORTER: ${{ inputs.reporter }}
+    - name: Show actionlint output
+      if: failure()
+      shell: bash
+      run: |
+        if [ -s "${RUNNER_TEMP}/actionlint-output.log" ]; then
+          cat "${RUNNER_TEMP}/actionlint-output.log"
+        fi
