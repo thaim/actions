@@ -56,9 +56,19 @@ jobs:
           ZIZMOR_OUTCOME: ${{ steps.zizmor.outcome }}
           ACTIONLINT_OUTCOME: ${{ steps.actionlint.outcome }}
         run: |
-          if [ "$GHALINT_OUTCOME" = "failure" ] || \
-             [ "$ZIZMOR_OUTCOME" = "failure" ] || \
-             [ "$ACTIONLINT_OUTCOME" = "failure" ]; then
-            echo "::error::One or more security checks failed"
+          failed=false
+          if [ "$GHALINT_OUTCOME" = "failure" ]; then
+            echo "::error::ghalint failed"
+            failed=true
+          fi
+          if [ "$ZIZMOR_OUTCOME" = "failure" ]; then
+            echo "::error::zizmor failed"
+            failed=true
+          fi
+          if [ "$ACTIONLINT_OUTCOME" = "failure" ]; then
+            echo "::error::actionlint failed"
+            failed=true
+          fi
+          if [ "$failed" = "true" ]; then
             exit 1
           fi

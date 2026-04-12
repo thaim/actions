@@ -23,7 +23,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
-          ghalint run 2>&1 | sed -nE 's/.*workflow_file_path="?([^ "]+)"?.* msg="?([^"]+)"?.*/\1:1:\2/p' | reviewdog -efm="%f:%l:%m" -name=ghalint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+          ghalint run 2>&1 | tee /dev/stderr | sed -nE 's/.*workflow_file_path="?([^ "]+)"?.* msg="?([^"]+)"?.*/\1:1:\2/p' | reviewdog -efm="%f:%l:%m" -name=ghalint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
         else
           ghalint run
         fi

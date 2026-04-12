@@ -23,7 +23,7 @@ runs:
       shell: bash
       run: |
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
-          actionlint | reviewdog -efm="%f:%l:%c: %m" -name=actionlint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+          actionlint | tee /dev/stderr | reviewdog -efm="%f:%l:%c: %m" -name=actionlint -reporter="${REPORTER}" -filter-mode=added -fail-on-error
         else
           actionlint -color
         fi
