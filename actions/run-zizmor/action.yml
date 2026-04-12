@@ -24,9 +24,6 @@ runs:
       run: |
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
           zizmor --offline --format=sarif . > "${RUNNER_TEMP}/zizmor-output.sarif"
-          if [ -s "${RUNNER_TEMP}/zizmor-output.sarif" ]; then
-            jq -r '.runs[].results[] | "\(.locations[].physicalLocation.artifactLocation.uri):\(.locations[].physicalLocation.region.startLine): \(.message.text)"' "${RUNNER_TEMP}/zizmor-output.sarif" || cat "${RUNNER_TEMP}/zizmor-output.sarif"
-          fi
           reviewdog -f=sarif -reporter="${REPORTER}" -filter-mode=added -fail-on-error < "${RUNNER_TEMP}/zizmor-output.sarif" || true
         else
           zizmor --offline .
@@ -35,3 +32,10 @@ runs:
         AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
         REPORTER: ${{ inputs.reporter }}
+    - name: Show zizmor output
+      if: failure()
+      shell: bash
+      run: |
+        if [ -s "${RUNNER_TEMP}/zizmor-output.sarif" ]; then
+          jq -r '.runs[].results[] | "\(.locations[].physicalLocation.artifactLocation.uri):\(.locations[].physicalLocation.region.startLine): \(.message.text)"' "${RUNNER_TEMP}/zizmor-output.sarif" || cat "${RUNNER_TEMP}/zizmor-output.sarif"
+        fi
