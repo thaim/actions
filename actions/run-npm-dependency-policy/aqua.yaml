@@ -1,0 +1,6 @@
+---
+registries:
+  - type: standard
+    ref: v4.492.0
+packages:
+  - name: reviewdog/reviewdog@v0.20.3

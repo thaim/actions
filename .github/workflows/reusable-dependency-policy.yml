@@ -1,0 +1,47 @@
+# Reusable workflow for dependency policy checks.
+# Usage:
+#   jobs:
+#     dependency-policy:
+#       uses: thaim/actions/.github/workflows/reusable-dependency-policy.yml@v1.0.0
+#
+# Checks (language-specific steps are skipped when their manifest file is absent):
+#   - npm-dependency-policy: Detects deprecated npm dependencies based on policy definition
+#   (Future: Go, Python, and other language checks will be added here)
+#
+# Note:
+#   This workflow uses individual composite actions (e.g. run-npm-dependency-policy)
+#   with absolute references because reusable workflows resolve
+#   relative paths against the caller repository, not this repository.
+#   New language-specific composite actions will follow the same pattern.
+name: Reusable Dependency Policy Checks
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  npm-dependency-policy:
+    name: npm Dependency Policy Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - id: npm-dependency-policy
+        uses: thaim/actions/actions/run-npm-dependency-policy@9e1a1743d4d41abee667ba08ad1939d222d8080c # main
+        continue-on-error: true
+        with:
+          github_token: ${{ github.token }}
+      - name: Check results
+        if: always()
+        env:
+          NPM_DEPENDENCY_POLICY_OUTCOME: ${{ steps.npm-dependency-policy.outcome }}
+        run: |
+          if [ "$NPM_DEPENDENCY_POLICY_OUTCOME" = "failure" ]; then
+            echo "::error::npm dependency policy check failed"
+            exit 1
+          fi

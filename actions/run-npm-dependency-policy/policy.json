@@ -1,0 +1,19 @@
+{
+  "rules": [
+    {
+      "package": "axios",
+      "reason": "Use native fetch (Node.js 18+) instead",
+      "alternatives": ["fetch"]
+    },
+    {
+      "package": "request",
+      "reason": "Archived. Use native fetch instead",
+      "alternatives": ["fetch"]
+    },
+    {
+      "package": "moment",
+      "reason": "Use date-fns or dayjs instead (lighter, tree-shakeable)",
+      "alternatives": ["date-fns", "dayjs"]
+    }
+  ]
+}
