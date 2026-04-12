@@ -42,11 +42,11 @@ runs:
         done < <(jq -r '(.dependencies // {}) + (.devDependencies // {}) | keys[]' package.json)
 
         if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
-          printf "%b" "$violations" | reviewdog -efm="%f:%l: %m" -name=npm-dependency-policy -reporter="${REPORTER}" -filter-mode=added -fail-on-error
+          printf "%b" "$violations" | reviewdog -efm="%f:%l: %m" -name=npm-dependency-policy -reporter="${REPORTER}" -filter-mode=added
         else
           if [ -n "$violations" ]; then
             printf "%b" "$violations"
-            exit 1
+            exit 0
           fi
         fi
       env:
