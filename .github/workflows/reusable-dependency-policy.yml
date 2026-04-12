@@ -1,17 +1,19 @@
-# Reusable workflow for npm dependency policy checks.
+# Reusable workflow for dependency policy checks.
 # Usage:
 #   jobs:
-#     npm-dependency-policy:
-#       uses: thaim/actions/.github/workflows/reusable-npm-dependency-policy.yml@v1.0.0
+#     dependency-policy:
+#       uses: thaim/actions/.github/workflows/reusable-dependency-policy.yml@v1.0.0
 #
-# Checks:
+# Checks (language-specific steps are skipped when their manifest file is absent):
 #   - npm-dependency-policy: Detects deprecated npm dependencies based on policy definition
+#   (Future: Go, Python, and other language checks will be added here)
 #
 # Note:
-#   This workflow uses individual composite actions (run-npm-dependency-policy)
+#   This workflow uses individual composite actions (e.g. run-npm-dependency-policy)
 #   with absolute references because reusable workflows resolve
 #   relative paths against the caller repository, not this repository.
-name: Reusable npm Dependency Policy Checks
+#   New language-specific composite actions will follow the same pattern.
+name: Reusable Dependency Policy Checks
 
 on:
   workflow_call:
