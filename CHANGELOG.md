@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.3.0](https://github.com/thaim/actions/compare/v1.2.0...v1.3.0) - 2026-04-12
+### New Features & Bug Fixes
+- feat: add dependency policy check workflow by @thaim in https://github.com/thaim/actions/pull/33
+### Internal Changes
+- chore(deps): update songmu/tagpr action to v1.18.2 by @renovate[bot] in https://github.com/thaim/actions/pull/32
+
 ## [v1.2.0](https://github.com/thaim/actions/compare/v1.1.0...v1.2.0) - 2026-04-05
 ### New Features & Bug Fixes
 - fix: avoid broken pipe error in zizmor action on push events by @thaim in https://github.com/thaim/actions/pull/20
