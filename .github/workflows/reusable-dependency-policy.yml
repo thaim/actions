@@ -32,7 +32,7 @@ jobs:
         with:
           persist-credentials: false
       - id: npm-dependency-policy
-        uses: thaim/actions/actions/run-npm-dependency-policy@9e1a1743d4d41abee667ba08ad1939d222d8080c # main
+        uses: thaim/actions/actions/run-npm-dependency-policy@5ce92a16f433ba1d30b96f38e32b7bef87c76b7f # v1.3.1
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
