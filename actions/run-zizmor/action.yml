@@ -33,7 +33,7 @@ runs:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
         REPORTER: ${{ inputs.reporter }}
     - name: Show zizmor output
-      if: failure()
+      if: always()
       shell: bash
       run: |
         if [ -s "${RUNNER_TEMP}/zizmor-output.sarif" ]; then
