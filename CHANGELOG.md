@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.3.3](https://github.com/thaim/actions/compare/v1.3.2...v1.3.3) - 2026-04-13
+### New Features & Bug Fixes
+- fix: show tool output when step has continue-on-error by @thaim in https://github.com/thaim/actions/pull/39
+
 ## [v1.3.2](https://github.com/thaim/actions/compare/v1.3.1...v1.3.2) - 2026-04-12
 ### New Features & Bug Fixes
 - fix: update run-npm-dependency-policy SHA to include action by @thaim in https://github.com/thaim/actions/pull/37
