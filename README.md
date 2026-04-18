@@ -22,6 +22,10 @@ jobs:
     uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v1.0.2
 ```
 
+## Development
+
+Composite action を変更する際は、composite action 修正の PR と reusable workflow 内の SHA 更新の PR を分けて作成する。詳細は [CLAUDE.md #開発フロー](CLAUDE.md#開発フロー) を参照。
+
 ## License
 
 MIT
