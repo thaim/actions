@@ -1,5 +1,12 @@
 # Changelog
 
+## [v1.3.4](https://github.com/thaim/actions/compare/v1.3.3...v1.3.4) - 2026-04-18
+### New Features & Bug Fixes
+- fix: change Show output step condition from failure() to always() by @thaim in https://github.com/thaim/actions/pull/42
+- fix: update composite action refs to include show-output fix by @thaim in https://github.com/thaim/actions/pull/44
+### Internal Changes
+- chore(deps): update songmu/tagpr action to v1.18.3 by @renovate[bot] in https://github.com/thaim/actions/pull/41
+
 ## [v1.3.3](https://github.com/thaim/actions/compare/v1.3.2...v1.3.3) - 2026-04-13
 ### New Features & Bug Fixes
 - fix: show tool output when step has continue-on-error by @thaim in https://github.com/thaim/actions/pull/39
