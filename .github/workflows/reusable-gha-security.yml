@@ -35,17 +35,17 @@ jobs:
         with:
           persist-credentials: false
       - id: ghalint
-        uses: thaim/actions/actions/run-ghalint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+        uses: thaim/actions/actions/run-ghalint@6f125b434752f00a844f9a7c7a672dab21e336b6 # PR#42
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
       - id: zizmor
-        uses: thaim/actions/actions/run-zizmor@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+        uses: thaim/actions/actions/run-zizmor@6f125b434752f00a844f9a7c7a672dab21e336b6 # PR#42
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
       - id: actionlint
-        uses: thaim/actions/actions/run-actionlint@b74965c3a29b05f4fef59a2f68af34970ef5e389 # fix-audit-error
+        uses: thaim/actions/actions/run-actionlint@6f125b434752f00a844f9a7c7a672dab21e336b6 # PR#42
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
