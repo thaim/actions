@@ -1,0 +1,74 @@
+# Reusable workflow for PR title validation and label assignment.
+# Usage:
+#   on:
+#     pull_request:
+#       types: [opened, edited, synchronize]
+#
+#   jobs:
+#     pr-check:
+#       uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+#
+# Inputs (optional):
+#   - types: Newline-separated list of allowed conventional commit types
+#   - type_labels: JSON object mapping each type to a label name
+#
+# Note:
+#   Keep `types` and `type_labels` consistent. A type listed in `types` but
+#   missing from `type_labels` will receive the default "other" label, which
+#   defeats the purpose of this workflow.
+#
+# Checks:
+#   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
+#   - bcoe/conventional-release-labels: Assigns labels based on PR title type
+name: Reusable PR Check
+
+on:
+  workflow_call:
+    inputs:
+      types:
+        description: "Newline-separated list of allowed conventional commit types"
+        required: false
+        type: string
+        default: |
+          feat
+          fix
+          ci
+          docs
+          refactor
+          chore
+      type_labels:
+        description: "JSON object mapping conventional commit types to label names"
+        required: false
+        type: string
+        default: |
+          {
+            "feat": "enhancement",
+            "fix": "bug",
+            "ci": "ci",
+            "docs": "documentation",
+            "refactor": "refactor",
+            "chore": "chore"
+          }
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          types: ${{ inputs.types }}
+      - uses: bcoe/conventional-release-labels@886f696738527c7be444262c327c89436dfb95a8 # v1
+        with:
+          token: ${{ github.token }}
+          type_labels: ${{ inputs.type_labels }}
+          ignored_types: "[]"
