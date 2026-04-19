@@ -3,17 +3,27 @@ name: Release
 on:
   push:
     branches: [main]
+  pull_request:
+    types: [labeled, unlabeled]
 
 jobs:
   tagpr:
+    if: >-
+      github.event_name != 'pull_request'
+      || (contains(fromJSON('["tagpr:major","tagpr:minor"]'), github.event.label.name)
+          && startsWith(github.event.pull_request.head.ref, 'tagpr-from-'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
       pull-requests: write
+    concurrency:
+      group: tagpr-${{ github.workflow }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          ref: main
           persist-credentials: false
       - uses: Songmu/tagpr@9bbb945b2fb025126186661e27d55485e3fc6df6 # v1.18.3
         env:
