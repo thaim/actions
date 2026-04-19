@@ -1,0 +1,25 @@
+name: "Sync PR labels"
+description: "Sync PR labels based on conventional commit type in PR title; only calls the label API when labels diverge from the desired state"
+
+inputs:
+  type_labels:
+    description: "JSON object mapping conventional commit types to label names"
+    required: true
+  github_token:
+    description: "GitHub token used for label API calls"
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Sync labels
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+      env:
+        TYPE_LABELS: ${{ inputs.type_labels }}
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const path = require('path');
+          const sync = require(path.join(process.env.GITHUB_ACTION_PATH, 'sync-labels.js'));
+          await sync({ github, context, core });
