@@ -19,7 +19,7 @@
 #
 # Checks:
 #   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
-#   - bcoe/conventional-release-labels: Assigns labels based on PR title type
+#   - thaim/actions/actions/sync-pr-labels: Assigns labels based on PR title type, only updating when current labels diverge from the desired state
 name: Reusable PR Check
 
 on:
@@ -67,8 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           types: ${{ inputs.types }}
-      - uses: bcoe/conventional-release-labels@886f696738527c7be444262c327c89436dfb95a8 # v1
+      - uses: thaim/actions/actions/sync-pr-labels@f85bf586aa690e58133f5a678cc9854657749f0c # PR#49
         with:
-          token: ${{ github.token }}
           type_labels: ${{ inputs.type_labels }}
-          ignored_types: "[]"
+          github_token: ${{ github.token }}
