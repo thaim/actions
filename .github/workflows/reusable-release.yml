@@ -3,13 +3,17 @@
 #   on:
 #     push:
 #       branches: [main]
+#     pull_request:
+#       types: [labeled, unlabeled]
 #
 #   jobs:
 #     release:
 #       uses: thaim/actions/.github/workflows/reusable-release.yml@v1.0.2
 #
 # Features:
-#   - Songmu/tagpr: Automatically creates release PRs and tags on push to main
+#   - Songmu/tagpr: Automatically creates release PRs and tags on push to main.
+#     Adding `tagpr:major` or `tagpr:minor` to a release PR (branches with the
+#     `tagpr-from-` prefix) triggers a re-run to recompute the version bump.
 name: Reusable Release
 
 on:
@@ -21,14 +25,22 @@ permissions:
 
 jobs:
   tagpr:
+    if: >-
+      github.event_name != 'pull_request'
+      || (contains(fromJSON('["tagpr:major","tagpr:minor"]'), github.event.label.name)
+          && startsWith(github.event.pull_request.head.ref, 'tagpr-from-'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
       pull-requests: write
+    concurrency:
+      group: tagpr-${{ github.workflow }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          ref: main
           persist-credentials: false
       - uses: Songmu/tagpr@9bbb945b2fb025126186661e27d55485e3fc6df6 # v1.18.3
         env:
