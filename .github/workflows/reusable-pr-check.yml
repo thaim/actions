@@ -1,0 +1,55 @@
+# Reusable workflow for PR title validation and label assignment.
+# Usage:
+#   on:
+#     pull_request:
+#       types: [opened, edited, synchronize]
+#
+#   jobs:
+#     pr-check:
+#       uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+#
+# Checks:
+#   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
+#   - bcoe/conventional-release-labels: Assigns labels based on PR title type
+#     (feat->enhancement, fix->bug, ci->ci, docs->documentation, refactor->refactor, chore->chore)
+name: Reusable PR Check
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          types: |
+            feat
+            fix
+            ci
+            docs
+            refactor
+            chore
+      - uses: bcoe/conventional-release-labels@886f696738527c7be444262c327c89436dfb95a8 # v1
+        with:
+          token: ${{ github.token }}
+          type_labels: |
+            {
+              "feat": "enhancement",
+              "fix": "bug",
+              "ci": "ci",
+              "docs": "documentation",
+              "refactor": "refactor",
+              "chore": "chore"
+            }
+          ignored_types: "[]"
