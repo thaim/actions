@@ -2,6 +2,9 @@
 # Validates the PR title format and applies labels derived from the title's type
 # in a single caller invocation.
 #
+# Pairs with reusable-release.yml: the labels applied here (enhancement, bug, ...)
+# feed tagpr's version-bump detection and changelog grouping.
+#
 # Usage:
 #   on:
 #     pull_request:
