@@ -19,7 +19,7 @@
 #
 # Checks:
 #   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
-#   - bcoe/conventional-release-labels: Assigns labels based on PR title type
+#   - actions/github-script: Assigns labels based on PR title type, updating labels only when there is a diff
 name: Reusable PR Check
 
 on:
@@ -67,8 +67,50 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           types: ${{ inputs.types }}
-      - uses: bcoe/conventional-release-labels@886f696738527c7be444262c327c89436dfb95a8 # v1
+      - name: Update labels based on PR title
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        env:
+          TYPE_LABELS: ${{ inputs.type_labels }}
         with:
-          token: ${{ github.token }}
-          type_labels: ${{ inputs.type_labels }}
-          ignored_types: "[]"
+          github-token: ${{ github.token }}
+          script: |
+            const typeLabels = JSON.parse(process.env.TYPE_LABELS);
+            const title = context.payload.pull_request.title;
+            const match = title.match(/^(?<type>[a-zA-Z]+)(?:\([^)]+\))?!?:/);
+            const type = match && match.groups && match.groups.type;
+            const desiredLabel = (type && typeLabels[type]) ? typeLabels[type] : 'other';
+
+            const currentLabels = context.payload.pull_request.labels.map(l => l.name);
+            const managedLabels = new Set([...Object.values(typeLabels), 'other']);
+
+            const removeTargets = currentLabels.filter(
+              name => managedLabels.has(name) && name !== desiredLabel
+            );
+            const shouldAdd = !currentLabels.includes(desiredLabel);
+
+            if (removeTargets.length === 0 && !shouldAdd) {
+              console.log('Labels already up-to-date');
+              return;
+            }
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+
+            for (const name of removeTargets) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name });
+              } catch (e) {
+                if (e.status !== 404) {
+                  throw e;
+                }
+              }
+            }
+
+            if (shouldAdd) {
+              await github.rest.issues.addLabels({
+                owner,
+                repo,
+                issue_number,
+                labels: [desiredLabel],
+              });
+            }
