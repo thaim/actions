@@ -49,12 +49,16 @@ jobs:
 
 [Songmu/tagpr](https://github.com/Songmu/tagpr) によるリリースフローを提供します。main ブランチへの push 時にリリース PR を自動作成し、リリース PR がマージされると自動的にタグを付与します。
 
+リリース PR (branch 名が `tagpr-from-` で始まる PR) に `tagpr:major` または `tagpr:minor` ラベルを付与すると workflow が再実行され、version bump が再計算されます。これを有効化するには呼び出し側で `pull_request: types: [labeled, unlabeled]` を on に追加してください。
+
 ```yaml
 name: Release
 
 on:
   push:
     branches: [main]
+  pull_request:
+    types: [labeled, unlabeled]
 
 jobs:
   release:
