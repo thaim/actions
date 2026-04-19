@@ -1,4 +1,4 @@
-name: Labeler
+name: Conventional PR
 
 on:
   pull_request:
@@ -9,5 +9,5 @@ permissions:
   pull-requests: write
 
 jobs:
-  pr-check:
-    uses: ./.github/workflows/reusable-pr-check.yml
+  conventional-pr:
+    uses: ./.github/workflows/reusable-conventional-pr.yml

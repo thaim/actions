@@ -4,29 +4,29 @@
 
 ## Reusable Workflows
 
-### reusable-pr-check
+### reusable-conventional-pr
 
-PR title が [conventional commit](https://www.conventionalcommits.org/) 形式に従うことを [amannn/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) で検証し、[bcoe/conventional-release-labels](https://github.com/bcoe/conventional-release-labels) で適切なラベルを付与します。
+PR に対して conventional commit 規約の準拠を保証する reusable workflow です。PR title を [amannn/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) で検証し、title の type に対応するラベルを [thaim/actions/actions/sync-pr-labels](actions/sync-pr-labels) で付与します。
 デフォルトで対応する type は `feat`, `fix`, `ci`, `docs`, `refactor`, `chore` で、それぞれ `enhancement`, `bug`, `ci`, `documentation`, `refactor`, `chore` ラベルにマッピングされます。
 
 ```yaml
-name: PR Check
+name: Conventional PR
 
 on:
   pull_request:
     types: [opened, edited, synchronize]
 
 jobs:
-  pr-check:
-    uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+  conventional-pr:
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
 ```
 
 許可する type やラベルマッピングをカスタマイズする場合は `types` / `type_labels` を指定します。`types` に追加した type は、`other` ラベル付与を避けるため `type_labels` にも同じキーを追加してください。
 
 ```yaml
 jobs:
-  pr-check:
-    uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+  conventional-pr:
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
     with:
       types: |
         feat
