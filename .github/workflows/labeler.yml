@@ -2,26 +2,12 @@ name: Labeler
 
 on:
   pull_request:
-    types: [opened, edited]
+    types: [opened, edited, synchronize]
 
 permissions:
+  contents: read
   pull-requests: write
 
 jobs:
-  label:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: bcoe/conventional-release-labels@886f696738527c7be444262c327c89436dfb95a8 # v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          type_labels: |
-            {
-              "feat": "enhancement",
-              "fix": "bug",
-              "ci": "ci",
-              "docs": "documentation",
-              "refactor": "refactor",
-              "chore": "chore"
-            }
-          ignored_types: "[]"
+  pr-check:
+    uses: ./.github/workflows/reusable-pr-check.yml
