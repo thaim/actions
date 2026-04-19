@@ -7,7 +7,7 @@
 ### reusable-pr-check
 
 PR title が [conventional commit](https://www.conventionalcommits.org/) 形式に従うことを [amannn/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) で検証し、[bcoe/conventional-release-labels](https://github.com/bcoe/conventional-release-labels) で適切なラベルを付与します。
-対応する type は `feat`, `fix`, `ci`, `docs`, `refactor`, `chore` で、それぞれ `enhancement`, `bug`, `ci`, `documentation`, `refactor`, `chore` ラベルにマッピングされます。
+デフォルトで対応する type は `feat`, `fix`, `ci`, `docs`, `refactor`, `chore` で、それぞれ `enhancement`, `bug`, `ci`, `documentation`, `refactor`, `chore` ラベルにマッピングされます。
 
 ```yaml
 name: PR Check
@@ -20,6 +20,30 @@ jobs:
   pr-check:
     uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
 ```
+
+許可する type やラベルマッピングをカスタマイズする場合は `types` / `type_labels` を指定します。`types` に追加した type は、`other` ラベル付与を避けるため `type_labels` にも同じキーを追加してください。
+
+```yaml
+jobs:
+  pr-check:
+    uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+    with:
+      types: |
+        feat
+        fix
+        perf
+      type_labels: |
+        {
+          "feat": "enhancement",
+          "fix": "bug",
+          "perf": "performance"
+        }
+```
+
+| 入力 | 必須 | デフォルト | 説明 |
+|------|------|----------|------|
+| `types` | no | `feat, fix, ci, docs, refactor, chore`（改行区切り） | 許可する conventional commit type の一覧 |
+| `type_labels` | no | 上記 type → 対応ラベルの JSON マッピング | type → ラベル名のマッピング（JSON 文字列） |
 
 ### reusable-release
 
