@@ -1,12 +1,18 @@
-# Reusable workflow for PR title validation and label assignment.
+# Reusable workflow that enforces conventional commit convention on PRs.
+# Validates the PR title format and applies labels derived from the title's type
+# in a single caller invocation.
+#
+# Pairs with reusable-release.yml: the labels applied here (enhancement, bug, ...)
+# feed tagpr's version-bump detection and changelog grouping.
+#
 # Usage:
 #   on:
 #     pull_request:
 #       types: [opened, edited, synchronize]
 #
 #   jobs:
-#     pr-check:
-#       uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+#     conventional-pr:
+#       uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
 #
 # Inputs (optional):
 #   - types: Newline-separated list of allowed conventional commit types
@@ -17,10 +23,10 @@
 #   missing from `type_labels` will receive the default "other" label, which
 #   defeats the purpose of this workflow.
 #
-# Checks:
+# Steps:
 #   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
 #   - thaim/actions/actions/sync-pr-labels: Assigns labels based on PR title type, only updating when current labels diverge from the desired state
-name: Reusable PR Check
+name: Reusable Conventional PR
 
 on:
   workflow_call:
@@ -55,7 +61,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  pr-check:
+  conventional-pr:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

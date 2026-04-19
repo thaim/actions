@@ -1,4 +1,9 @@
 # Reusable workflow for automated release management using tagpr.
+#
+# Pairs with reusable-conventional-pr.yml: tagpr relies on the PR labels and
+# conventional-commit PR titles produced by that workflow to decide version
+# bumps and group changelog entries. Adopt both workflows together.
+#
 # Usage:
 #   on:
 #     push:

@@ -4,29 +4,33 @@
 
 ## Reusable Workflows
 
-### reusable-pr-check
+### Release Flow
 
-PR title が [conventional commit](https://www.conventionalcommits.org/) 形式に従うことを [amannn/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) で検証し、[bcoe/conventional-release-labels](https://github.com/bcoe/conventional-release-labels) で適切なラベルを付与します。
+`reusable-conventional-pr` と `reusable-release` はペアで利用することを前提とした reusable workflow です。前者が PR title の conventional commit 形式を検証して対応ラベル（`enhancement` / `bug` 等）を付与し、後者の tagpr がそのラベルと PR title を用いて version bump 判定と CHANGELOG 生成を行います。`reusable-release` を採用する場合は `reusable-conventional-pr` も併せて導入してください（ラベルが付かないと tagpr の version bump 判定が機能しません）。
+
+### reusable-conventional-pr
+
+PR に対して conventional commit 規約の準拠を保証する reusable workflow です。PR title を [amannn/action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request) で検証し、title の type に対応するラベルを [thaim/actions/actions/sync-pr-labels](actions/sync-pr-labels) で付与します。`reusable-release` とペアで運用する前提です（詳細は上記 [Release Flow](#release-flow) を参照）。
 デフォルトで対応する type は `feat`, `fix`, `ci`, `docs`, `refactor`, `chore` で、それぞれ `enhancement`, `bug`, `ci`, `documentation`, `refactor`, `chore` ラベルにマッピングされます。
 
 ```yaml
-name: PR Check
+name: Conventional PR
 
 on:
   pull_request:
     types: [opened, edited, synchronize]
 
 jobs:
-  pr-check:
-    uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+  conventional-pr:
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
 ```
 
 許可する type やラベルマッピングをカスタマイズする場合は `types` / `type_labels` を指定します。`types` に追加した type は、`other` ラベル付与を避けるため `type_labels` にも同じキーを追加してください。
 
 ```yaml
 jobs:
-  pr-check:
-    uses: thaim/actions/.github/workflows/reusable-pr-check.yml@v1.0.2
+  conventional-pr:
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
     with:
       types: |
         feat
@@ -47,7 +51,7 @@ jobs:
 
 ### reusable-release
 
-[Songmu/tagpr](https://github.com/Songmu/tagpr) によるリリースフローを提供します。main ブランチへの push 時にリリース PR を自動作成し、リリース PR がマージされると自動的にタグを付与します。
+[Songmu/tagpr](https://github.com/Songmu/tagpr) によるリリースフローを提供します。main ブランチへの push 時にリリース PR を自動作成し、リリース PR がマージされると自動的にタグを付与します。version bump の判定や CHANGELOG 生成は PR に付与されたラベルと PR title を参照するため、`reusable-conventional-pr` とペアで運用してください（詳細は上記 [Release Flow](#release-flow) を参照）。
 
 リリース PR (branch 名が `tagpr-from-` で始まる PR) に `tagpr:major` または `tagpr:minor` ラベルを付与すると workflow が再実行され、version bump が再計算されます。これを有効化するには呼び出し側で `pull_request: types: [labeled, unlabeled]` を on に追加してください。
 
