@@ -50,3 +50,10 @@ jobs:
       - uses: Songmu/tagpr@e84001bd5dac8defa0c75b3913937d284a3b3660 # v1.20.0
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # tagpr uses the first line of the template as the release PR title.
+          # Prefix it with a conventional-commit type so the release PR passes
+          # reusable-conventional-pr.yml without any per-repository .tagpr config.
+          TAGPR_TEMPLATE_TEXT: |
+            chore: Release for {{.NextVersion}}
+
+            {{.Changelog}}
