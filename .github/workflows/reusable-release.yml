@@ -51,9 +51,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           # tagpr uses the first line of the template as the release PR title.
-          # Prefix it with a conventional-commit type so the release PR passes
-          # reusable-conventional-pr.yml without any per-repository .tagpr config.
+          # This is tagpr's default PR template (defaultTmplStr, v1.20.0) with a
+          # conventional-commit `chore:` prefix prepended to the title line, so the
+          # release PR passes reusable-conventional-pr.yml with no per-repository
+          # .tagpr config. Keep the body in sync with tagpr's defaultTmplStr on upgrades.
           TAGPR_TEMPLATE_TEXT: |
-            chore: Release for {{.NextVersion}}
+            chore: {{if .TagPrefix}}[{{.TagPrefix}}] {{end}}Release for {{.NextVersion}}
 
+            This pull request is for the next release as {{.NextVersion}} created by [tagpr](https://github.com/Songmu/tagpr). Merging it will tag {{.NextVersion}} to the merge commit and create a GitHub release.
+
+            You can modify this branch "{{.Branch}}" directly before merging if you want to change the next version number or other files for the release.
+
+            <details>
+            <summary>How to change the next version as you like</summary>
+
+            There are two ways to do it.
+
+            - Version file
+                - Edit and commit the version file specified in the .tagpr configuration file to describe the next version
+                - If you want to use another version file, edit the configuration file.
+            - Labels convention
+                - Add labels to this pull request like "tagpr:minor" or "tagpr:major"
+                - If no conventional labels are added, the patch version is incremented as is.
+            </details>
+
+            ---
             {{.Changelog}}
