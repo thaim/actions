@@ -1,5 +1,23 @@
 # Changelog
 
+## [v1.4.0](https://github.com/thaim/actions/compare/v1.3.4...v1.4.0) - 2026-07-05
+
+### New Features & Bug Fixes
+- feat: add reusable workflows for PR check and release by @thaim in https://github.com/thaim/actions/pull/47
+- feat: enable label-triggered tagpr re-run in reusable-release by @thaim in https://github.com/thaim/actions/pull/48
+- feat: add sync-pr-labels composite action by @thaim in https://github.com/thaim/actions/pull/49
+- fix: avoid re-applying unchanged labels in reusable-pr-check by @thaim in https://github.com/thaim/actions/pull/52
+- fix: restore tagpr default PR body in release template by @thaim in https://github.com/thaim/actions/pull/59
+### Internal Changes
+- docs: add development workflow and CLAUDE.md by @thaim in https://github.com/thaim/actions/pull/45
+- chore: switch labeler and release workflows to reusable by @thaim in https://github.com/thaim/actions/pull/53
+- chore(deps): update actions/github-script action to v9 by @renovate[bot] in https://github.com/thaim/actions/pull/51
+- chore(deps): update songmu/tagpr action to v1.20.0 by @renovate[bot] in https://github.com/thaim/actions/pull/54
+- chore(deps): update actions/checkout action to v6.0.3 by @renovate[bot] in https://github.com/thaim/actions/pull/55
+- chore(deps): update aquaproj/aqua-installer action to v4.0.5 by @renovate[bot] in https://github.com/thaim/actions/pull/57
+- chore(deps): update actions/checkout action to v7 by @renovate[bot] in https://github.com/thaim/actions/pull/56
+- ci: make tagpr release PR title conventional via TAGPR_TEMPLATE_TEXT by @thaim in https://github.com/thaim/actions/pull/58
+
 ## [v1.3.4](https://github.com/thaim/actions/compare/v1.3.3...v1.3.4) - 2026-04-18
 ### New Features & Bug Fixes
 - fix: change Show output step condition from failure() to always() by @thaim in https://github.com/thaim/actions/pull/42
