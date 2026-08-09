@@ -17,6 +17,7 @@
 # Inputs (optional):
 #   - types: Newline-separated list of allowed conventional commit types
 #   - type_labels: JSON object mapping each type to a label name
+#   - breaking_labels: Labels applied when the title marks a breaking change with `!`
 #
 # Note:
 #   Keep `types` and `type_labels` consistent. A type listed in `types` but
@@ -25,7 +26,7 @@
 #
 # Steps:
 #   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
-#   - thaim/actions/actions/sync-pr-labels: Assigns labels based on PR title type, only updating when current labels diverge from the desired state
+#   - thaim/actions/actions/sync-pr-labels: Assigns labels based on PR title type and the `!` breaking marker, only updating when current labels diverge from the desired state
 name: Reusable Conventional PR
 
 on:
@@ -55,6 +56,11 @@ on:
             "refactor": "refactor",
             "chore": "chore"
           }
+      breaking_labels:
+        description: "Newline-separated labels applied when the PR title marks a breaking change with `!`; empty disables the marker"
+        required: false
+        type: string
+        default: "breaking-change"
 
 permissions:
   contents: read
@@ -73,7 +79,8 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           types: ${{ inputs.types }}
-      - uses: thaim/actions/actions/sync-pr-labels@f85bf586aa690e58133f5a678cc9854657749f0c # PR#49
+      - uses: thaim/actions/actions/sync-pr-labels@29266d872410ee27f0ec50024c761ba6c810b2ae # PR#65
         with:
           type_labels: ${{ inputs.type_labels }}
+          breaking_labels: ${{ inputs.breaking_labels }}
           github_token: ${{ github.token }}

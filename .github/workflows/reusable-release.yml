@@ -62,6 +62,12 @@ jobs:
       - uses: Songmu/tagpr@d1b8138b7a31075141b6cd64103de9485ced7ac9 # v1.20.1
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # `breaking-change` is what reusable-conventional-pr.yml applies to a PR whose
+          # title carries the conventional-commit `!` marker, so mapping it here makes one
+          # label drive both the changelog section and the major bump. tagpr's own default
+          # `major` is kept for hand-labelled PRs. This env wins over a repository's .tagpr,
+          # so a caller that configures tagpr.majorLabels loses that setting.
+          TAGPR_MAJOR_LABELS: major,breaking-change
           # tagpr uses the first line of the template as the release PR title.
           # This is tagpr's default PR template (defaultTmplStr, v1.20.0) with a
           # conventional-commit `chore:` prefix prepended to the title line, so the
