@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.0.0](https://github.com/thaim/actions/compare/v1.4.0...v2.0.0) - 2026-08-09
+
+### Breaking Changes
+- fix!: add issues read permission to reusable release workflow by @thaim in https://github.com/thaim/actions/pull/64
+### New Features & Bug Fixes
+- feat: label PRs whose title marks a breaking change with ! by @thaim in https://github.com/thaim/actions/pull/65
+- feat: derive the version bump from the ! breaking marker by @thaim in https://github.com/thaim/actions/pull/67
+### Internal Changes
+- chore(deps): update actions/checkout action to v7.0.1 by @renovate[bot] in https://github.com/thaim/actions/pull/61
+- chore(deps): update songmu/tagpr action to v1.20.1 by @renovate[bot] in https://github.com/thaim/actions/pull/60
+- chore(deps): update actions/checkout action to v7.0.1 by @renovate[bot] in https://github.com/thaim/actions/pull/66
+
 ## [v1.4.0](https://github.com/thaim/actions/compare/v1.3.4...v1.4.0) - 2026-07-05
 
 ### New Features & Bug Fixes
