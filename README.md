@@ -4,6 +4,8 @@
 
 ## Reusable Workflows
 
+いずれの workflow も、呼び出し側に各節の例と同じ `permissions` が必要です。reusable workflow は呼び出し側より広い権限を要求できないため、不足するとジョブが 1 つも生成されないまま run が `startup_failure` で終了します。
+
 ### Release Flow
 
 `reusable-conventional-pr` と `reusable-release` はペアで利用することを前提とした reusable workflow です。前者が PR title の conventional commit 形式を検証して対応ラベル（`enhancement` / `bug` 等）を付与し、後者の tagpr がそのラベルと PR title を用いて version bump 判定と CHANGELOG 生成を行います。`reusable-release` を採用する場合は `reusable-conventional-pr` も併せて導入してください（ラベルが付かないと tagpr の version bump 判定が機能しません）。
@@ -19,6 +21,10 @@ name: Conventional PR
 on:
   pull_request:
     types: [opened, edited, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   conventional-pr:
@@ -77,8 +83,6 @@ jobs:
     uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
 ```
 
-reusable workflow は呼び出し側より広い権限を要求できないため、上記の `permissions` が呼び出し側に欠けていると、ジョブが 1 つも生成されないまま run が `startup_failure` で終了します。
-
 ### reusable-gha-security
 
 GitHub Actions ワークフローに対して [actionlint](https://github.com/rhysd/actionlint)、[ghalint](https://github.com/suzuki-shunsuke/ghalint)、[zizmor](https://github.com/woodruffw/zizmor) によるセキュリティチェックを実行します。
@@ -91,6 +95,10 @@ on:
   push:
     branches: [main]
   pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   security:

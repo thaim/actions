@@ -1,5 +1,9 @@
 # Reusable workflow for dependency policy checks.
 # Usage:
+#   permissions:
+#     contents: read
+#     pull-requests: write
+#
 #   jobs:
 #     dependency-policy:
 #       uses: thaim/actions/.github/workflows/reusable-dependency-policy.yml@v2.0.0
