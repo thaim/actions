@@ -64,10 +64,17 @@ on:
   pull_request:
     types: [labeled, unlabeled]
 
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
 jobs:
   release:
     uses: thaim/actions/.github/workflows/reusable-release.yml@v1.0.2
 ```
+
+reusable workflow は呼び出し側より広い権限を要求できないため、上記の `permissions` が呼び出し側に欠けていると、ジョブが 1 つも生成されないまま run が `startup_failure` で終了します。
 
 ### reusable-gha-security
 

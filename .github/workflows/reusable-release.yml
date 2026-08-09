@@ -11,9 +11,17 @@
 #     pull_request:
 #       types: [labeled, unlabeled]
 #
+#   permissions:
+#     contents: write
+#     pull-requests: write
+#     issues: read
+#
 #   jobs:
 #     release:
 #       uses: thaim/actions/.github/workflows/reusable-release.yml@v1.0.2
+#
+#   The caller must declare these permissions; a reusable workflow cannot request
+#   more than its caller holds, and a shortfall ends the run as `startup_failure`.
 #
 # Features:
 #   - Songmu/tagpr: Automatically creates release PRs and tags on push to main.
@@ -27,6 +35,9 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  # tagpr reads merged PRs through the issues API for the changelog, which GitHub
+  # rejects in private repositories without `issues`. Label writes go through PRs.
+  issues: read
 
 jobs:
   tagpr:
@@ -39,6 +50,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: read
     concurrency:
       group: tagpr-${{ github.workflow }}
       cancel-in-progress: false
