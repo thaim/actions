@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      # The tests use only node:test and node:assert, so the runner's preinstalled
+      # Node covers them: no package.json, no install step, no version to pin.
+      # `node --test` without arguments discovers every *.test.js under the repository.
+      - run: node --test

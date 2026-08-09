@@ -1,10 +1,14 @@
 name: "Sync PR labels"
-description: "Sync PR labels based on conventional commit type in PR title; only calls the label API when labels diverge from the desired state"
+description: "Sync PR labels based on conventional commit type and breaking-change marker in PR title; only calls the label API when labels diverge from the desired state"
 
 inputs:
   type_labels:
     description: "JSON object mapping conventional commit types to label names"
     required: true
+  breaking_labels:
+    description: "Newline-separated labels applied when the PR title marks a breaking change with `!`; empty disables the marker"
+    required: false
+    default: "breaking-change"
   github_token:
     description: "GitHub token used for label API calls"
     required: false
@@ -17,6 +21,7 @@ runs:
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       env:
         TYPE_LABELS: ${{ inputs.type_labels }}
+        BREAKING_LABELS: ${{ inputs.breaking_labels }}
       with:
         github-token: ${{ inputs.github_token }}
         script: |
