@@ -14,7 +14,7 @@ const TYPE_LABELS = JSON.stringify({
   chore: 'chore',
 });
 
-const BREAKING_LABELS = 'breaking-change\nmajor';
+const BREAKING_LABELS = 'breaking-change';
 
 function setup({ title, labels = [], removeLabelError } = {}) {
   const calls = { added: [], removed: [], failures: [], infos: [] };
@@ -78,32 +78,40 @@ test('replaces a stale type label', async () => {
   assert.deepEqual(calls.added, ['enhancement']);
 });
 
-test('adds the breaking labels for a title marked with !', async () => {
+test('adds the breaking label for a title marked with !', async () => {
   const calls = await run({ title: 'fix!: require issues permission' });
-  assert.deepEqual(calls.added, ['bug', 'breaking-change', 'major']);
+  assert.deepEqual(calls.added, ['bug', 'breaking-change']);
   assert.deepEqual(calls.removed, []);
 });
 
-test('adds the breaking labels for a scoped title marked with !', async () => {
+test('adds the breaking label for a scoped title marked with !', async () => {
   const calls = await run({ title: 'feat(release)!: drop the v1 interface' });
-  assert.deepEqual(calls.added, ['enhancement', 'breaking-change', 'major']);
+  assert.deepEqual(calls.added, ['enhancement', 'breaking-change']);
 });
 
-test('keeps the breaking labels that are already present', async () => {
+test('applies every label of a multi-line input', async () => {
   const calls = await run({
     title: 'fix!: require issues permission',
-    labels: ['bug', 'breaking-change', 'major'],
+    breakingLabels: 'breaking-change\nmajor',
+  });
+  assert.deepEqual(calls.added, ['bug', 'breaking-change', 'major']);
+});
+
+test('keeps the breaking label that is already present', async () => {
+  const calls = await run({
+    title: 'fix!: require issues permission',
+    labels: ['bug', 'breaking-change'],
   });
   assert.deepEqual(calls.added, []);
   assert.deepEqual(calls.removed, []);
 });
 
-test('removes the breaking labels once ! is dropped from the title', async () => {
+test('removes the breaking label once ! is dropped from the title', async () => {
   const calls = await run({
     title: 'fix: require issues permission',
-    labels: ['bug', 'breaking-change', 'major'],
+    labels: ['bug', 'breaking-change'],
   });
-  assert.deepEqual(calls.removed, ['breaking-change', 'major']);
+  assert.deepEqual(calls.removed, ['breaking-change']);
   assert.deepEqual(calls.added, []);
 });
 

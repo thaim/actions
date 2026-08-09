@@ -8,9 +8,7 @@ inputs:
   breaking_labels:
     description: "Newline-separated labels applied when the PR title marks a breaking change with `!`; empty disables the marker"
     required: false
-    default: |
-      breaking-change
-      major
+    default: "breaking-change"
   github_token:
     description: "GitHub token used for label API calls"
     required: false
