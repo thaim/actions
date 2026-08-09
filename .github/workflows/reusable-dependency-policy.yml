@@ -2,7 +2,7 @@
 # Usage:
 #   jobs:
 #     dependency-policy:
-#       uses: thaim/actions/.github/workflows/reusable-dependency-policy.yml@v1.0.0
+#       uses: thaim/actions/.github/workflows/reusable-dependency-policy.yml@v2.0.0
 #
 # Checks (language-specific steps are skipped when their manifest file is absent):
 #   - npm-dependency-policy: Detects deprecated npm dependencies based on policy definition

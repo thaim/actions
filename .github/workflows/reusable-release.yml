@@ -18,7 +18,7 @@
 #
 #   jobs:
 #     release:
-#       uses: thaim/actions/.github/workflows/reusable-release.yml@v1.0.2
+#       uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
 #
 #   The caller must declare these permissions; a reusable workflow cannot request
 #   more than its caller holds, and a shortfall ends the run as `startup_failure`.

@@ -22,7 +22,7 @@ on:
 
 jobs:
   conventional-pr:
-    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v2.0.0
 ```
 
 許可する type やラベルマッピングをカスタマイズする場合は `types` / `type_labels` を指定します。`types` に追加した type は、`other` ラベル付与を避けるため `type_labels` にも同じキーを追加してください。
@@ -30,7 +30,7 @@ jobs:
 ```yaml
 jobs:
   conventional-pr:
-    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v2.0.0
     with:
       types: |
         feat
@@ -74,7 +74,7 @@ permissions:
 
 jobs:
   release:
-    uses: thaim/actions/.github/workflows/reusable-release.yml@v1.0.2
+    uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
 ```
 
 reusable workflow は呼び出し側より広い権限を要求できないため、上記の `permissions` が呼び出し側に欠けていると、ジョブが 1 つも生成されないまま run が `startup_failure` で終了します。
@@ -94,7 +94,7 @@ on:
 
 jobs:
   security:
-    uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v1.0.2
+    uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v2.0.0
 ```
 
 ## Development

@@ -12,7 +12,7 @@
 #
 #   jobs:
 #     conventional-pr:
-#       uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v1.0.2
+#       uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v2.0.0
 #
 # Inputs (optional):
 #   - types: Newline-separated list of allowed conventional commit types
