@@ -1,5 +1,10 @@
 # Changelog
 
+## [v2.0.1](https://github.com/thaim/actions/compare/v2.0.0...v2.0.1) - 2026-08-09
+
+### Internal Changes
+- docs: point the usage examples at v2.0.0 by @thaim in https://github.com/thaim/actions/pull/68
+
 ## [v2.0.0](https://github.com/thaim/actions/compare/v1.4.0...v2.0.0) - 2026-08-09
 
 ### Breaking Changes
