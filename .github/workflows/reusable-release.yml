@@ -31,6 +31,16 @@ name: Reusable Release
 
 on:
   workflow_call:
+    inputs:
+      config:
+        description: "Path to the tagpr config file"
+        required: false
+        type: string
+        default: .tagpr
+      release_drafter_config:
+        description: "release-drafter config file name under .github; when set, release-drafter creates the GitHub Release instead of tagpr"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -59,13 +69,19 @@ jobs:
         with:
           ref: main
           persist-credentials: false
-      - uses: Songmu/tagpr@7ebae2dcc300132baa7cc9dd108c8923b07fc366 # v1.20.3
+      - id: tagpr
+        uses: Songmu/tagpr@7ebae2dcc300132baa7cc9dd108c8923b07fc366 # v1.20.3
+        with:
+          config: ${{ inputs.config }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # Hand the GitHub Release to release-drafter, whose categories can scope a
+          # monorepo product by path and conventional type. Empty keeps the config file's value.
+          TAGPR_RELEASE: ${{ inputs.release_drafter_config != '' && 'false' || '' }}
           # `breaking-change` is what reusable-conventional-pr.yml applies to a PR whose
           # title carries the conventional-commit `!` marker, so mapping it here makes one
           # label drive both the changelog section and the major bump. tagpr's own default
-          # `major` is kept for hand-labelled PRs. This env wins over a repository's .tagpr,
+          # `major` is kept for hand-labelled PRs. This env wins over the tagpr config file,
           # so a caller that configures tagpr.majorLabels loses that setting.
           TAGPR_MAJOR_LABELS: major,breaking-change
           # tagpr uses the first line of the template as the release PR title.
@@ -95,3 +111,11 @@ jobs:
 
             ---
             {{.Changelog}}
+      - if: inputs.release_drafter_config != '' && steps.tagpr.outputs.tag != ''
+        uses: release-drafter/release-drafter@34d80673e067bdc0c24568d3af899c216adcfaa9 # v7.7.0
+        with:
+          config-name: ${{ inputs.release_drafter_config }}
+          tag: ${{ steps.tagpr.outputs.tag }}
+          name: ${{ steps.tagpr.outputs.tag }}
+          commitish: refs/tags/${{ steps.tagpr.outputs.tag }}
+          publish: true

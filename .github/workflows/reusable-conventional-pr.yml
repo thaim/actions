@@ -22,6 +22,8 @@
 #   - types: Newline-separated list of allowed conventional commit types
 #   - type_labels: JSON object mapping each type to a label name
 #   - breaking_labels: Labels applied when the title marks a breaking change with `!`
+#   - product_labels: JSON object mapping monorepo product directories to label names
+#   - common_label: Label applied when the PR changes a file outside every product directory
 #
 # Note:
 #   Keep `types` and `type_labels` consistent. A type listed in `types` but
@@ -30,7 +32,7 @@
 #
 # Steps:
 #   - amannn/action-semantic-pull-request: Validates PR title follows conventional commit format
-#   - thaim/actions/actions/sync-pr-labels: Assigns labels based on PR title type and the `!` breaking marker, only updating when current labels diverge from the desired state
+#   - thaim/actions/actions/sync-pr-labels: Assigns labels based on PR title type, the `!` breaking marker and, when configured, the changed product directories, only updating when current labels diverge from the desired state
 name: Reusable Conventional PR
 
 on:
@@ -65,6 +67,16 @@ on:
         required: false
         type: string
         default: "breaking-change"
+      product_labels:
+        description: "JSON object mapping monorepo product directories to label names; empty disables product labels"
+        required: false
+        type: string
+        default: ""
+      common_label:
+        description: "Label applied when the PR changes a file outside every product directory; empty disables it"
+        required: false
+        type: string
+        default: "product:common"
 
 permissions:
   contents: read
@@ -83,8 +95,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           types: ${{ inputs.types }}
-      - uses: thaim/actions/actions/sync-pr-labels@29266d872410ee27f0ec50024c761ba6c810b2ae # PR#65
+      - uses: thaim/actions/actions/sync-pr-labels@8def678194cc26516ec7dd6b459b9a98710e138f # PR#73
         with:
           type_labels: ${{ inputs.type_labels }}
           breaking_labels: ${{ inputs.breaking_labels }}
+          product_labels: ${{ inputs.product_labels }}
+          common_label: ${{ inputs.common_label }}
           github_token: ${{ github.token }}
