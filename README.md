@@ -55,6 +55,8 @@ jobs:
 | `types` | no | `feat, fix, ci, docs, refactor, chore`（改行区切り） | 許可する conventional commit type の一覧 |
 | `type_labels` | no | 上記 type → 対応ラベルの JSON マッピング | type → ラベル名のマッピング（JSON 文字列） |
 | `breaking_labels` | no | `breaking-change`（改行区切り） | title が `!` で破壊的変更を示すときに付与するラベル。空文字で無効化 |
+| `product_labels` | no | `""` | モノレポのプロダクトのディレクトリ → ラベル名のマッピング（JSON 文字列）。指定すると変更したプロダクトのラベルを付与する（[モノレポでの利用](#モノレポでの利用)） |
+| `common_label` | no | `product:common` | どのプロダクトのディレクトリにも属さないファイルを変更したときに付与するラベル。空文字で無効化 |
 
 ### reusable-release
 
@@ -82,6 +84,103 @@ jobs:
   release:
     uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
 ```
+
+| 入力 | 必須 | デフォルト | 説明 |
+|------|------|----------|------|
+| `config` | no | `.tagpr` | tagpr の設定ファイルのパス |
+| `release_drafter_config` | no | なし | `.github` 配下の [release-drafter](https://github.com/release-drafter/release-drafter) 設定ファイル名。指定すると GitHub Release を tagpr ではなく release-drafter が作成する |
+
+#### モノレポでの利用
+
+1 つのリポジトリで複数のプロダクトを独立にバージョニングする場合は、プロダクトごとに設定ファイルと workflow ファイルを用意します。CHANGELOG は tagpr がプロダクト単位でまとめ、GitHub Release は release-drafter が変更種別ごとに分類して作成します。
+
+PR には `reusable-conventional-pr` の `product_labels` で、変更したプロダクトのラベル（`product:foo`）と、どのプロダクトにも属さないファイルを変更した場合の `product:common` を付与します。
+
+```yaml
+jobs:
+  conventional-pr:
+    uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v2.0.0
+    with:
+      product_labels: |
+        {
+          "packages/foo": "product:foo",
+          "packages/bar": "product:bar"
+        }
+```
+
+```ini
+# packages/foo/.tagpr
+[tagpr]
+	releaseBranch = main
+	vPrefix = true
+	versionFile = -
+	tagPrefix = packages/foo
+	changelogFile = packages/foo/CHANGELOG.md
+	releaseYAMLPath = packages/foo/release.yml
+```
+
+```yaml
+# packages/foo/release.yml（CHANGELOG 用）
+changelog:
+  exclude:
+    labels: [tagpr]
+  categories:
+    - title: Changes
+      labels: [product:foo, product:common]
+```
+
+```yaml
+# .github/release-drafter-foo.yml（GitHub Release 用）
+tag-prefix: packages/foo/
+template: |
+  $CHANGES
+categories:
+  - type: pre-include
+    when:
+      labels: [product:foo, product:common]
+  - type: pre-exclude
+    when:
+      label: tagpr
+  - title: Breaking Changes
+    exclusive: true
+    when:
+      conventional:
+        breaking: true
+  - title: New Features & Bug Fixes
+    when:
+      conventional:
+        types: [feat, fix]
+  - title: Internal Changes
+```
+
+```yaml
+# .github/workflows/release-foo.yml
+name: Release foo
+
+on:
+  push:
+    branches: [main]
+    paths: ["packages/foo/**"]
+  pull_request:
+    types: [labeled, unlabeled]
+    paths: ["packages/foo/**"]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+jobs:
+  release:
+    uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
+    with:
+      config: packages/foo/.tagpr
+      release_drafter_config: release-drafter-foo.yml
+```
+
+- `tagPrefix` と `paths` はプロダクトのディレクトリと一致させてください。tagpr はリリース PR を main へのコミットがあるたびに作成・更新するため、`paths` で他プロダクトの変更による実行を防ぎます
+- `changelogFile` はプロダクトのディレクトリ内に置いてください。リリース PR の merge 時の push を `paths` に一致させ、タグを付与するためです
+- release-drafter は前回の範囲を `tag-prefix` に一致する公開済みリリースから決めます。GitHub Release を下書きに戻したり削除したりしないでください
 
 ### reusable-gha-security
 
