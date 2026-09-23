@@ -1,0 +1,30 @@
+name: "Sync product labels"
+description: "Sync PR labels based on which product directories the PR changes in a monorepo; only calls the label API when labels diverge from the desired state"
+
+inputs:
+  product_labels:
+    description: "JSON object mapping product directories to label names"
+    required: true
+  common_label:
+    description: "Label applied when the PR changes a file outside every product directory; empty disables it"
+    required: false
+    default: "product:common"
+  github_token:
+    description: "GitHub token used for the pull request files and label API calls"
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Sync labels
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        PRODUCT_LABELS: ${{ inputs.product_labels }}
+        COMMON_LABEL: ${{ inputs.common_label }}
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const path = require('path');
+          const sync = require(path.join(process.env.GITHUB_ACTION_PATH, 'sync-labels.js'));
+          await sync({ github, context, core });
