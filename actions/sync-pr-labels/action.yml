@@ -1,5 +1,5 @@
 name: "Sync PR labels"
-description: "Sync PR labels based on conventional commit type and breaking-change marker in PR title; only calls the label API when labels diverge from the desired state"
+description: "Sync PR labels based on conventional commit type and breaking-change marker in PR title, and optionally on the monorepo product directories the PR changes; only calls the label API when labels diverge from the desired state"
 
 inputs:
   type_labels:
@@ -9,8 +9,16 @@ inputs:
     description: "Newline-separated labels applied when the PR title marks a breaking change with `!`; empty disables the marker"
     required: false
     default: "breaking-change"
+  product_labels:
+    description: "JSON object mapping monorepo product directories to label names; empty disables product labels"
+    required: false
+    default: ""
+  common_label:
+    description: "Label applied when the PR changes a file outside every product directory; empty disables it"
+    required: false
+    default: "product:common"
   github_token:
-    description: "GitHub token used for label API calls"
+    description: "GitHub token used for the pull request files and label API calls"
     required: false
     default: ${{ github.token }}
 
@@ -22,6 +30,8 @@ runs:
       env:
         TYPE_LABELS: ${{ inputs.type_labels }}
         BREAKING_LABELS: ${{ inputs.breaking_labels }}
+        PRODUCT_LABELS: ${{ inputs.product_labels }}
+        COMMON_LABEL: ${{ inputs.common_label }}
       with:
         github-token: ${{ inputs.github_token }}
         script: |

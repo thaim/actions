@@ -16,10 +16,22 @@ const TYPE_LABELS = JSON.stringify({
 
 const BREAKING_LABELS = 'breaking-change';
 
-function setup({ title, labels = [], removeLabelError } = {}) {
-  const calls = { added: [], removed: [], failures: [], infos: [] };
+const PRODUCT_LABELS = JSON.stringify({
+  'packages/foo': 'product:foo',
+  'packages/bar/': 'product:bar',
+});
+
+function setup({ title, labels = [], files = [], removeLabelError } = {}) {
+  const calls = { added: [], removed: [], failures: [], infos: [], listedFiles: 0 };
+  const listFiles = async () => {};
   const github = {
+    paginate: async (method) => {
+      assert.equal(method, listFiles);
+      calls.listedFiles++;
+      return files.map(f => (typeof f === 'string' ? { filename: f } : f));
+    },
     rest: {
+      pulls: { listFiles },
       issues: {
         addLabels: async ({ labels }) => {
           calls.added.push(...labels);
@@ -50,6 +62,8 @@ async function run(options) {
   const env = { ...process.env };
   process.env.TYPE_LABELS = TYPE_LABELS;
   process.env.BREAKING_LABELS = options.breakingLabels ?? BREAKING_LABELS;
+  process.env.PRODUCT_LABELS = options.productLabels ?? '';
+  process.env.COMMON_LABEL = options.commonLabel ?? 'product:common';
   const fixture = setup(options);
   try {
     await sync(fixture);
@@ -153,6 +167,87 @@ test('propagates a non-404 error from removeLabel', async () => {
     }),
     /Forbidden/
   );
+});
+
+test('does not list the changed files when product labels are unset', async () => {
+  const calls = await run({ title: 'fix: correct the permission', files: ['packages/foo/main.go'] });
+  assert.equal(calls.listedFiles, 0);
+  assert.deepEqual(calls.added, ['bug']);
+});
+
+test('adds the label of the changed product', async () => {
+  const calls = await run({
+    title: 'fix: correct the permission',
+    productLabels: PRODUCT_LABELS,
+    files: ['packages/foo/main.go'],
+  });
+  assert.deepEqual(calls.added, ['bug', 'product:foo']);
+});
+
+test('adds the label of every changed product', async () => {
+  const calls = await run({
+    title: 'fix: correct the permission',
+    productLabels: PRODUCT_LABELS,
+    files: ['packages/foo/main.go', 'packages/bar/main.go'],
+  });
+  assert.deepEqual(calls.added, ['bug', 'product:foo', 'product:bar']);
+});
+
+test('adds the common label for a file outside every product', async () => {
+  const calls = await run({
+    title: 'ci: pin the checkout action',
+    productLabels: PRODUCT_LABELS,
+    files: ['.github/workflows/test.yml'],
+  });
+  assert.deepEqual(calls.added, ['ci', 'product:common']);
+});
+
+test('adds both the product and the common label for a mixed change', async () => {
+  const calls = await run({
+    title: 'chore: bump the go version',
+    productLabels: PRODUCT_LABELS,
+    files: ['packages/foo/main.go', 'go.mod'],
+  });
+  assert.deepEqual(calls.added, ['chore', 'product:foo', 'product:common']);
+});
+
+test('does not match a directory that only shares the prefix', async () => {
+  const calls = await run({
+    title: 'fix: correct the permission',
+    productLabels: PRODUCT_LABELS,
+    files: ['packages/foobar/main.go'],
+  });
+  assert.deepEqual(calls.added, ['bug', 'product:common']);
+});
+
+test('counts the source path of a renamed file', async () => {
+  const calls = await run({
+    title: 'refactor: move the util',
+    productLabels: PRODUCT_LABELS,
+    files: [{ filename: 'packages/bar/util.go', previous_filename: 'packages/foo/util.go' }],
+  });
+  assert.deepEqual(calls.added, ['refactor', 'product:bar', 'product:foo']);
+});
+
+test('removes a product label the PR no longer earns', async () => {
+  const calls = await run({
+    title: 'fix: correct the permission',
+    labels: ['bug', 'product:foo', 'product:bar'],
+    productLabels: PRODUCT_LABELS,
+    files: ['packages/foo/main.go'],
+  });
+  assert.deepEqual(calls.removed, ['product:bar']);
+  assert.deepEqual(calls.added, []);
+});
+
+test('applies no common label when the input is empty', async () => {
+  const calls = await run({
+    title: 'chore: bump the go version',
+    productLabels: PRODUCT_LABELS,
+    commonLabel: '',
+    files: ['packages/foo/main.go', 'go.mod'],
+  });
+  assert.deepEqual(calls.added, ['chore', 'product:foo']);
 });
 
 test('fails when the event carries no pull request', async () => {
