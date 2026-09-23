@@ -1,5 +1,15 @@
 # Changelog
 
+## [v2.1.0](https://github.com/thaim/actions/compare/v2.0.0...v2.1.0) - 2026-09-23
+
+### New Features & Bug Fixes
+- feat: sync monorepo product labels in sync-pr-labels by @thaim in https://github.com/thaim/actions/pull/73
+- feat: support per-product releases in monorepos by @thaim in https://github.com/thaim/actions/pull/74
+### Internal Changes
+- docs: point the usage examples at v2.0.0 by @thaim in https://github.com/thaim/actions/pull/68
+- chore(deps): update songmu/tagpr action to v1.20.3 by @renovate[bot] in https://github.com/thaim/actions/pull/70
+- chore(deps): update dependency aqua to v2.63.0 by @renovate[bot] in https://github.com/thaim/actions/pull/71
+
 ## [v2.0.0](https://github.com/thaim/actions/compare/v1.4.0...v2.0.0) - 2026-08-09
 
 ### Breaking Changes
