@@ -38,12 +38,12 @@ jobs:
         with:
           persist-credentials: false
       - id: ghalint
-        uses: thaim/actions/actions/run-ghalint@6f125b434752f00a844f9a7c7a672dab21e336b6 # PR#42
+        uses: thaim/actions/actions/run-ghalint@e396e3273a95e9bf9b18916ae76361d0daaf1f45 # PR#85
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
       - id: zizmor
-        uses: thaim/actions/actions/run-zizmor@6f125b434752f00a844f9a7c7a672dab21e336b6 # PR#42
+        uses: thaim/actions/actions/run-zizmor@e396e3273a95e9bf9b18916ae76361d0daaf1f45 # PR#85
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
