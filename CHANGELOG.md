@@ -1,5 +1,21 @@
 # Changelog
 
+## [v3.0.0](https://github.com/thaim/actions/compare/v2.1.0...v3.0.0) - 2026-10-11
+
+### Breaking Changes
+- feat!: lint workflows with jdx/jactionlint through thaim/action-reviewdog-jactionlint by @thaim in https://github.com/thaim/actions/pull/83
+### New Features & Bug Fixes
+- fix: bump the minor version for feat PRs in reusable-release by @thaim in https://github.com/thaim/actions/pull/75
+- fix: resolve jdx/jactionlint default profile findings in workflows and usage examples by @thaim in https://github.com/thaim/actions/pull/84
+- feat: add update_semver_tags input to reusable-release by @thaim in https://github.com/thaim/actions/pull/86
+### Internal Changes
+- chore(deps): update songmu/tagpr action to v1.21.2 by @renovate[bot] in https://github.com/thaim/actions/pull/72
+- chore(deps): update release-drafter/release-drafter action to v7.10.0 by @renovate[bot] in https://github.com/thaim/actions/pull/79
+- chore(deps): update aquaproj/aqua-installer action to v4.1.0 by @renovate[bot] in https://github.com/thaim/actions/pull/80
+- chore(deps): update dependency aqua to v2.64.0 by @renovate[bot] in https://github.com/thaim/actions/pull/81
+- refactor: replace the deprecated -fail-on-error of reviewdog with -fail-level=any by @thaim in https://github.com/thaim/actions/pull/85
+- chore: update run-ghalint and run-zizmor in reusable-gha-security to PR#85 by @thaim in https://github.com/thaim/actions/pull/87
+
 ## [v2.1.0](https://github.com/thaim/actions/compare/v2.0.0...v2.1.0) - 2026-09-23
 
 ### New Features & Bug Fixes
