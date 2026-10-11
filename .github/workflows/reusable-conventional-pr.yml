@@ -10,8 +10,6 @@
 #     pull_request:
 #       types: [opened, edited, synchronize]
 #
-#   permissions: {}
-#
 #   jobs:
 #     conventional-pr:
 #       permissions:
@@ -78,8 +76,6 @@ on:
         required: false
         type: string
         default: "product:common"
-
-permissions: {}
 
 jobs:
   conventional-pr:

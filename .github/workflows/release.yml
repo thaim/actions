@@ -6,8 +6,6 @@ on:
   pull_request:
     types: [labeled, unlabeled]
 
-permissions: {}
-
 # Do not cancel a release in progress, so that tagpr never stops between tagging and creating the release.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

@@ -1,7 +1,5 @@
 # Reusable workflow for GitHub Actions security checks.
 # Usage:
-#   permissions: {}
-#
 #   jobs:
 #     security:
 #       permissions:
@@ -26,8 +24,6 @@ name: Reusable GitHub Actions Security Checks
 
 on:
   workflow_call:
-
-permissions: {}
 
 jobs:
   security-checks:

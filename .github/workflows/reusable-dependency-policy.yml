@@ -1,7 +1,5 @@
 # Reusable workflow for dependency policy checks.
 # Usage:
-#   permissions: {}
-#
 #   jobs:
 #     dependency-policy:
 #       permissions:
@@ -22,8 +20,6 @@ name: Reusable Dependency Policy Checks
 
 on:
   workflow_call:
-
-permissions: {}
 
 jobs:
   npm-dependency-policy:

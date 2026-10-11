@@ -22,8 +22,6 @@ on:
   pull_request:
     types: [opened, edited, synchronize]
 
-permissions: {}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -79,8 +77,6 @@ on:
     branches: [main]
   pull_request:
     types: [labeled, unlabeled]
-
-permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -175,8 +171,6 @@ on:
     types: [labeled, unlabeled]
     paths: ["packages/foo/**"]
 
-permissions: {}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
@@ -211,8 +205,6 @@ on:
   push:
     branches: [main]
   pull_request:
-
-permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
