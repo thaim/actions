@@ -62,7 +62,7 @@ jobs:
 
 [Songmu/tagpr](https://github.com/Songmu/tagpr) によるリリースフローを提供します。main ブランチへの push 時にリリース PR を自動作成し、リリース PR がマージされると自動的にタグを付与します。version bump の判定や CHANGELOG 生成は PR に付与されたラベルと PR title を参照するため、`reusable-conventional-pr` とペアで運用してください（詳細は上記 [Release Flow](#release-flow) を参照）。
 
-version bump は、前回のリリース以降にマージされた PR のラベルで決まります。`major` または `breaking-change`（`reusable-conventional-pr` が title の `!` から付与）が付いていれば major、`minor` なら minor、いずれも無ければ patch です。
+version bump は、前回のリリース以降にマージされた PR のラベルで決まります。`major` または `breaking-change`（`reusable-conventional-pr` が title の `!` から付与）が付いていれば major、`minor` または `enhancement`（`reusable-conventional-pr` が `feat` に付与）なら minor、いずれも無ければ patch です。
 
 リリース PR (branch 名が `tagpr-from-` で始まる PR) に `tagpr:major` または `tagpr:minor` ラベルを付与すると workflow が再実行され、version bump が再計算されます。これを有効化するには呼び出し側で `pull_request: types: [labeled, unlabeled]` を on に追加してください。
 

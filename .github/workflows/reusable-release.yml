@@ -84,6 +84,10 @@ jobs:
           # `major` is kept for hand-labelled PRs. This env wins over the tagpr config file,
           # so a caller that configures tagpr.majorLabels loses that setting.
           TAGPR_MAJOR_LABELS: major,breaking-change
+          # Map `enhancement`, the label reusable-conventional-pr.yml applies to `feat`, to a
+          # minor bump as conventional commits define it; tagpr's default `minor` alone left
+          # feature releases at a patch bump. This env also wins over tagpr.minorLabels.
+          TAGPR_MINOR_LABELS: minor,enhancement
           # tagpr uses the first line of the template as the release PR title.
           # This is tagpr's default PR template (defaultTmplStr, v1.20.0) with a
           # conventional-commit `chore:` prefix prepended to the title line, so the
