@@ -1,11 +1,10 @@
 # Reusable workflow for dependency policy checks.
 # Usage:
-#   permissions:
-#     contents: read
-#     pull-requests: write
-#
 #   jobs:
 #     dependency-policy:
+#       permissions:
+#         contents: read
+#         pull-requests: write
 #       uses: thaim/actions/.github/workflows/reusable-dependency-policy.yml@v2.0.0
 #
 # Checks (language-specific steps are skipped when their manifest file is absent):
@@ -22,15 +21,14 @@ name: Reusable Dependency Policy Checks
 on:
   workflow_call:
 
-permissions:
-  contents: read
-  pull-requests: write
-
 jobs:
   npm-dependency-policy:
     name: npm Dependency Policy Checks
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

@@ -4,10 +4,13 @@ on:
   pull_request:
     types: [opened, edited, synchronize]
 
-permissions:
-  contents: read
-  pull-requests: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   conventional-pr:
+    permissions:
+      contents: read
+      pull-requests: write
     uses: ./.github/workflows/reusable-conventional-pr.yml
