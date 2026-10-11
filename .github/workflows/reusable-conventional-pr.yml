@@ -10,12 +10,13 @@
 #     pull_request:
 #       types: [opened, edited, synchronize]
 #
-#   permissions:
-#     contents: read
-#     pull-requests: write
+#   permissions: {}
 #
 #   jobs:
 #     conventional-pr:
+#       permissions:
+#         contents: read
+#         pull-requests: write
 #       uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v2.0.0
 #
 # Inputs (optional):
@@ -78,9 +79,7 @@ on:
         type: string
         default: "product:common"
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: {}
 
 jobs:
   conventional-pr:
