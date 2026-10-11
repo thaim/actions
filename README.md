@@ -184,7 +184,8 @@ jobs:
 
 ### reusable-gha-security
 
-GitHub Actions ワークフローに対して [actionlint](https://github.com/rhysd/actionlint)、[ghalint](https://github.com/suzuki-shunsuke/ghalint)、[zizmor](https://github.com/woodruffw/zizmor) によるセキュリティチェックを実行します。
+GitHub Actions ワークフローに対して [jdx/jactionlint](https://github.com/jdx/jactionlint)、[ghalint](https://github.com/suzuki-shunsuke/ghalint)、[zizmor](https://github.com/woodruffw/zizmor) によるセキュリティチェックを実行します。
+jdx/jactionlint は [rhysd/actionlint](https://github.com/rhysd/actionlint) のフォークで、[thaim/action-reviewdog-jactionlint](https://github.com/thaim/action-reviewdog-jactionlint) を通じて correctness profile（rhysd/actionlint 相当の検査）で実行します。呼び出し元の `.github/actionlint.yaml` は、`.github/jactionlint.yaml` がない場合に引き続き読み込まれます。
 PRでは [reviewdog](https://github.com/reviewdog/reviewdog) によるインラインコメントで問題箇所を通知します。
 
 ```yaml
