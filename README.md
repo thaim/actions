@@ -22,12 +22,17 @@ on:
   pull_request:
     types: [opened, edited, synchronize]
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   conventional-pr:
+    permissions:
+      contents: read
+      pull-requests: write
     uses: thaim/actions/.github/workflows/reusable-conventional-pr.yml@v2.0.0
 ```
 
@@ -75,13 +80,18 @@ on:
   pull_request:
     types: [labeled, unlabeled]
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: read
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
     uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
 ```
 
@@ -165,13 +175,18 @@ on:
     types: [labeled, unlabeled]
     paths: ["packages/foo/**"]
 
-permissions:
-  contents: write
-  pull-requests: write
-  issues: read
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
     uses: thaim/actions/.github/workflows/reusable-release.yml@v2.0.0
     with:
       config: packages/foo/.tagpr
@@ -197,12 +212,17 @@ on:
     branches: [main]
   pull_request:
 
-permissions:
-  contents: read
-  pull-requests: write
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   security:
+    permissions:
+      contents: read
+      pull-requests: write
     uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v2.0.0
 ```
 
