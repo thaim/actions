@@ -185,7 +185,8 @@ jobs:
 ### reusable-gha-security
 
 GitHub Actions ワークフローに対して [jdx/jactionlint](https://github.com/jdx/jactionlint)、[ghalint](https://github.com/suzuki-shunsuke/ghalint)、[zizmor](https://github.com/woodruffw/zizmor) によるセキュリティチェックを実行します。
-jdx/jactionlint は [rhysd/actionlint](https://github.com/rhysd/actionlint) のフォークで、[thaim/action-reviewdog-jactionlint](https://github.com/thaim/action-reviewdog-jactionlint) を通じて correctness profile（rhysd/actionlint 相当の検査）で実行します。
+jdx/jactionlint は [rhysd/actionlint](https://github.com/rhysd/actionlint) のフォークで、[thaim/action-reviewdog-jactionlint](https://github.com/thaim/action-reviewdog-jactionlint) を通じて実行します。
+既定では、rhysd/actionlint の検査にセキュリティ・ポリシーのルールを加えた default profile で検査します。
 PRでは [reviewdog](https://github.com/reviewdog/reviewdog) によるインラインコメントで問題箇所を通知します。
 
 ```yaml
@@ -203,6 +204,13 @@ permissions:
 jobs:
   security:
     uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v2.0.0
+```
+
+rhysd/actionlint 相当の検査だけにする場合は、呼び出し元に `.github/jactionlint.yaml` を置いて profile を指定してください。
+
+```yaml
+# .github/jactionlint.yaml
+profile: correctness
 ```
 
 ## Development

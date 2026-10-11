@@ -9,7 +9,10 @@
 #       uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v2.0.0
 #
 # Checks:
-#   - jdx/jactionlint: Lints workflow YAML files with the correctness profile, the checks of rhysd/actionlint
+#   - jdx/jactionlint: Lints workflow YAML files with the profile of the caller's
+#     .github/jactionlint.yaml, or the default profile, which adds security and
+#     policy rules to the checks of rhysd/actionlint. Set "profile: correctness"
+#     there to keep only the checks of rhysd/actionlint.
 #   - ghalint: Checks GitHub Actions security best practices
 #   - zizmor: Detects security vulnerabilities in GitHub Actions workflows
 #
@@ -53,7 +56,6 @@ jobs:
         uses: thaim/action-reviewdog-jactionlint@7b4eb1ef623a3a957ce45912bce3ba8b599c2fdc # v0.1.0
         continue-on-error: true
         with:
-          profile: correctness
           # The local reporter on push needs no checks: write, which callers do not grant.
           reporter: ${{ github.event_name == 'pull_request' && 'github-pr-review' || 'local' }}
           filter_mode: ${{ github.event_name == 'pull_request' && 'added' || 'nofilter' }}
