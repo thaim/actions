@@ -9,14 +9,15 @@
 #       uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v2.0.0
 #
 # Checks:
-#   - actionlint: Lints workflow YAML files
+#   - jdx/jactionlint: Lints workflow YAML files with the correctness profile, the checks of rhysd/actionlint
 #   - ghalint: Checks GitHub Actions security best practices
 #   - zizmor: Detects security vulnerabilities in GitHub Actions workflows
 #
 # Note:
-#   This workflow uses individual composite actions (run-ghalint, run-zizmor,
-#   run-actionlint) with absolute references because reusable workflows resolve
-#   relative paths against the caller repository, not this repository.
+#   This workflow uses individual composite actions (run-ghalint, run-zizmor)
+#   with absolute references because reusable workflows resolve relative paths
+#   against the caller repository, not this repository.
+#   jdx/jactionlint runs through thaim/action-reviewdog-jactionlint.
 name: Reusable GitHub Actions Security Checks
 
 on:
@@ -48,17 +49,21 @@ jobs:
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
-      - id: actionlint
-        uses: thaim/actions/actions/run-actionlint@6f125b434752f00a844f9a7c7a672dab21e336b6 # PR#42
+      - id: jactionlint
+        uses: thaim/action-reviewdog-jactionlint@7b4eb1ef623a3a957ce45912bce3ba8b599c2fdc # v0.1.0
         continue-on-error: true
         with:
-          github_token: ${{ github.token }}
+          profile: correctness
+          # The local reporter on push needs no checks: write, which callers do not grant.
+          reporter: ${{ github.event_name == 'pull_request' && 'github-pr-review' || 'local' }}
+          filter_mode: ${{ github.event_name == 'pull_request' && 'added' || 'nofilter' }}
+          fail_level: error
       - name: Check results
         if: always()
         env:
           GHALINT_OUTCOME: ${{ steps.ghalint.outcome }}
           ZIZMOR_OUTCOME: ${{ steps.zizmor.outcome }}
-          ACTIONLINT_OUTCOME: ${{ steps.actionlint.outcome }}
+          JACTIONLINT_OUTCOME: ${{ steps.jactionlint.outcome }}
         run: |
           failed=false
           if [ "$GHALINT_OUTCOME" = "failure" ]; then
@@ -69,8 +74,8 @@ jobs:
             echo "::error::zizmor failed"
             failed=true
           fi
-          if [ "$ACTIONLINT_OUTCOME" = "failure" ]; then
-            echo "::error::actionlint failed"
+          if [ "$JACTIONLINT_OUTCOME" = "failure" ]; then
+            echo "::error::jactionlint failed"
             failed=true
           fi
           if [ "$failed" = "true" ]; then
