@@ -95,6 +95,7 @@ jobs:
 |------|------|----------|------|
 | `config` | no | `.tagpr` | tagpr の設定ファイルのパス |
 | `release_drafter_config` | no | なし | `.github` 配下の [release-drafter](https://github.com/release-drafter/release-drafter) 設定ファイル名。指定すると GitHub Release を tagpr ではなく release-drafter が作成する |
+| `update_semver_tags` | no | `false` | `true` にすると、リリースのたびにメジャー・マイナーバージョンのタグ（`v1.2.3` に対する `v1` と `v1.2`）を [haya14busa/action-update-semver](https://github.com/haya14busa/action-update-semver) で付け替える。GitHub Action を `@v1` のように参照できるようにする場合に使う |
 
 #### モノレポでの利用
 

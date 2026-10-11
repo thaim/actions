@@ -40,6 +40,11 @@ on:
         description: "release-drafter config file name under .github; when set, release-drafter creates the GitHub Release instead of tagpr"
         required: false
         type: string
+      update_semver_tags:
+        description: "Move the major and minor version tags (e.g. v1 and v1.2) to each released tag, so that a GitHub Action can be referenced by them"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   tagpr:
@@ -117,3 +122,9 @@ jobs:
           name: ${{ steps.tagpr.outputs.tag }}
           commitish: refs/tags/${{ steps.tagpr.outputs.tag }}
           publish: true
+      # Move the major and minor tags in this job from the tag that tagpr created in this checkout,
+      # because GitHub triggers no workflow on the tag that tagpr pushes with GITHUB_TOKEN.
+      - if: inputs.update_semver_tags && steps.tagpr.outputs.tag != ''
+        uses: haya14busa/action-update-semver@7d2c558640ea49e798d46539536190aff8c18715 # v1.5.1
+        with:
+          tag: ${{ steps.tagpr.outputs.tag }}
