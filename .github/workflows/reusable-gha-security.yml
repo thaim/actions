@@ -48,7 +48,7 @@ jobs:
         with:
           github_token: ${{ github.token }}
       - id: jactionlint
-        uses: thaim/action-reviewdog-jactionlint@7b4eb1ef623a3a957ce45912bce3ba8b599c2fdc # v0.1.0
+        uses: thaim/action-reviewdog-jactionlint@b52f6516892ebe5f021bcddb2b56e80394603657 # v0.1.1
         continue-on-error: true
         with:
           # The local reporter on push needs no checks: write, which callers do not grant.
