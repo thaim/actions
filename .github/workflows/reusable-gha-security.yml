@@ -14,9 +14,13 @@
 #     there to keep only the checks of rhysd/actionlint.
 #   - ghalint: Checks GitHub Actions security best practices
 #   - zizmor: Detects security vulnerabilities in GitHub Actions workflows
+#   - pinact: Checks that actions are pinned to a full-length commit SHA with a
+#     full semver comment (e.g. `# v4.2.2`, not `# v4`), the form Renovate writes
+#     with helpers:pinGitHubActionDigestsToSemver. Ignore actions with rules in
+#     the caller's .pinact.yaml.
 #
 # Note:
-#   This workflow uses individual composite actions (run-ghalint, run-zizmor)
+#   This workflow uses individual composite actions (run-ghalint, run-zizmor, run-pinact)
 #   with absolute references because reusable workflows resolve relative paths
 #   against the caller repository, not this repository.
 #   jdx/jactionlint runs through thaim/action-reviewdog-jactionlint.
@@ -47,6 +51,11 @@ jobs:
         continue-on-error: true
         with:
           github_token: ${{ github.token }}
+      - id: pinact
+        uses: thaim/actions/actions/run-pinact@ffdb513ce83e2dcc6b3b8d0c7103ad56f2ae25eb # PR#92
+        continue-on-error: true
+        with:
+          github_token: ${{ github.token }}
       - id: jactionlint
         uses: thaim/action-reviewdog-jactionlint@7b4eb1ef623a3a957ce45912bce3ba8b599c2fdc # v0.1.0
         continue-on-error: true
@@ -60,6 +69,7 @@ jobs:
         env:
           GHALINT_OUTCOME: ${{ steps.ghalint.outcome }}
           ZIZMOR_OUTCOME: ${{ steps.zizmor.outcome }}
+          PINACT_OUTCOME: ${{ steps.pinact.outcome }}
           JACTIONLINT_OUTCOME: ${{ steps.jactionlint.outcome }}
         run: |
           failed=false
@@ -69,6 +79,10 @@ jobs:
           fi
           if [ "$ZIZMOR_OUTCOME" = "failure" ]; then
             echo "::error::zizmor failed"
+            failed=true
+          fi
+          if [ "$PINACT_OUTCOME" = "failure" ]; then
+            echo "::error::pinact failed"
             failed=true
           fi
           if [ "$JACTIONLINT_OUTCOME" = "failure" ]; then
