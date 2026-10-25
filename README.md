@@ -194,7 +194,7 @@ jobs:
 
 ### reusable-gha-security
 
-GitHub Actions ワークフローに対して [jdx/jactionlint](https://github.com/jdx/jactionlint)、[ghalint](https://github.com/suzuki-shunsuke/ghalint)、[zizmor](https://github.com/woodruffw/zizmor) によるセキュリティチェックを実行します。
+GitHub Actions ワークフローに対して [jdx/jactionlint](https://github.com/jdx/jactionlint)、[ghalint](https://github.com/suzuki-shunsuke/ghalint)、[zizmor](https://github.com/woodruffw/zizmor)、[pinact](https://github.com/suzuki-shunsuke/pinact) によるセキュリティチェックを実行します。
 jdx/jactionlint は [rhysd/actionlint](https://github.com/rhysd/actionlint) のフォークで、[thaim/action-reviewdog-jactionlint](https://github.com/thaim/action-reviewdog-jactionlint) を通じて実行します。
 既定では、rhysd/actionlint の検査にセキュリティ・ポリシーのルールを加えた default profile で検査します。
 PRでは [reviewdog](https://github.com/reviewdog/reviewdog) によるインラインコメントで問題箇所を通知します。
@@ -217,6 +217,17 @@ jobs:
       contents: read
       pull-requests: write
     uses: thaim/actions/.github/workflows/reusable-gha-security.yml@v2.0.0
+```
+
+pinact は action がコミット SHA と完全な semver のコメント（`# v4` ではなく `# v4.2.2`）で固定されていることを検査します。Renovate の [helpers:pinGitHubActionDigestsToSemver](https://docs.renovatebot.com/presets-helpers/#helperspingithubactiondigeststosemver) が書く形式です。検査から外す action は、呼び出し元の `.pinact.yaml` の [rules](https://github.com/suzuki-shunsuke/pinact/blob/main/docs/config.md#rules) で指定してください。
+
+```yaml
+# .pinact.yaml
+version: 3
+rules:
+  - ignore: true
+    conditions:
+      - expr: ActionRepoFullName == "owner/repo"
 ```
 
 rhysd/actionlint 相当の検査だけにする場合は、呼び出し元に `.github/jactionlint.yaml` を置いて profile を指定してください。
