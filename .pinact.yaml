@@ -1,0 +1,6 @@
+version: 3
+rules:
+  # Composite actions of this repository are pinned with `# PR#<number>`, not a version (see CLAUDE.md).
+  - ignore: true
+    conditions:
+      - expr: ActionRepoFullName == "thaim/actions"
