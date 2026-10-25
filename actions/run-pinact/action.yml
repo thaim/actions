@@ -1,0 +1,45 @@
+name: "Run pinact"
+description: "Check that actions are pinned to a full-length commit SHA with a full semver comment, using pinact with optional reviewdog integration"
+
+inputs:
+  github_token:
+    description: "GitHub token for reviewdog to post PR comments"
+    required: false
+    default: ""
+  reporter:
+    description: "reviewdog reporter type"
+    required: false
+    default: "github-pr-review"
+
+runs:
+  using: composite
+  steps:
+    - uses: aquaproj/aqua-installer@82d0e83878a8657c4a6f2ff1755d3bfbfc67f329 # v4.1.0
+      with:
+        aqua_version: v2.64.0
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+    # `pinact run` without `--fix` only reports, so `actions/checkout@<sha> # v4` fails as needing `# v4.x.y`,
+    # the same comment Renovate writes with helpers:pinGitHubActionDigestsToSemver.
+    - name: Run pinact
+      shell: bash
+      run: |
+        if [ -n "${REVIEWDOG_GITHUB_API_TOKEN}" ]; then
+          pinact run --format sarif | tee "${RUNNER_TEMP}/pinact.sarif" | reviewdog -f=sarif -name=pinact -reporter="${REPORTER}" -filter-mode=added -fail-level=any
+        else
+          pinact run --check
+        fi
+      env:
+        AQUA_CONFIG: ${{ github.action_path }}/aqua.yaml
+        # pinact resolves tags through the GitHub API, which allows only 60 unauthenticated requests an hour.
+        # aqua also uses it to verify the GitHub Artifact Attestations of pinact.
+        GITHUB_TOKEN: ${{ inputs.github_token || github.token }}
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github_token }}
+        REPORTER: ${{ inputs.reporter }}
+    - name: Show pinact output
+      if: always()
+      shell: bash
+      run: |
+        if [ -s "${RUNNER_TEMP}/pinact.sarif" ]; then
+          jq -r '.runs[].results[] | "\(.locations[0].physicalLocation.artifactLocation.uri):\(.locations[0].physicalLocation.region.startLine): \(.message.text)"' "${RUNNER_TEMP}/pinact.sarif"
+        fi
