@@ -1,5 +1,16 @@
 # Changelog
 
+## [v3.1.0](https://github.com/thaim/actions/compare/v3.0.0...v3.1.0) - 2026-10-25
+
+### New Features & Bug Fixes
+- feat: add run-pinact composite action to enforce full semver version comments by @thaim in https://github.com/thaim/actions/pull/92
+- feat: run pinact in reusable-gha-security by @thaim in https://github.com/thaim/actions/pull/94
+### Internal Changes
+- chore(deps): update aquaproj/aqua-installer action to v4.1.1 by @renovate[bot] in https://github.com/thaim/actions/pull/91
+- chore(deps): update songmu/tagpr action to v1.21.4 by @renovate[bot] in https://github.com/thaim/actions/pull/89
+- chore(deps): update dependency aqua to v2.65.2 by @renovate[bot] in https://github.com/thaim/actions/pull/90
+- chore(deps): update thaim/action-reviewdog-jactionlint action to v0.1.2 by @renovate[bot] in https://github.com/thaim/actions/pull/88
+
 ## [v3.0.0](https://github.com/thaim/actions/compare/v2.1.0...v3.0.0) - 2026-10-11
 
 ### Breaking Changes
