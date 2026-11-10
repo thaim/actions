@@ -1,5 +1,12 @@
 # Changelog
 
+## [v3.1.1](https://github.com/thaim/actions/compare/v3.1.0...v3.1.1) - 2026-11-10
+
+### Internal Changes
+- chore(deps): update amannn/action-semantic-pull-request action to v6.1.2 by @renovate[bot] in https://github.com/thaim/actions/pull/97
+- chore(deps): update songmu/tagpr action to v1.22.0 by @renovate[bot] in https://github.com/thaim/actions/pull/96
+- chore(deps): update dependency aqua to v2.66.1 by @renovate[bot] in https://github.com/thaim/actions/pull/95
+
 ## [v3.1.0](https://github.com/thaim/actions/compare/v3.0.0...v3.1.0) - 2026-10-25
 
 ### New Features & Bug Fixes
