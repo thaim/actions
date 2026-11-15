@@ -22,6 +22,20 @@
 #   The calling job must declare these permissions; a reusable workflow cannot request
 #   more than its caller holds, and a shortfall ends the run as `startup_failure`.
 #
+#   To run release steps such as a deployment only when tagpr has tagged, depend on the
+#   `tag` output from a later job in the caller:
+#
+#     deploy:
+#       needs: release
+#       if: needs.release.outputs.tag != ''
+#       steps:
+#         - uses: actions/checkout@...
+#           with:
+#             ref: ${{ needs.release.outputs.tag }}
+#
+#   A tag pushed by tagpr with GITHUB_TOKEN does not trigger a separate `on: push: tags`
+#   workflow, so the release steps have to run in the calling workflow like this.
+#
 # Features:
 #   - Songmu/tagpr: Automatically creates release PRs and tags on push to main.
 #     Adding `tagpr:major` or `tagpr:minor` to a release PR (branches with the
@@ -45,6 +59,10 @@ on:
         required: false
         type: boolean
         default: false
+    outputs:
+      tag:
+        description: "The tag that tagpr created in this run, such as v1.2.3; empty when no tag was created"
+        value: ${{ jobs.tagpr.outputs.tag }}
 
 jobs:
   tagpr:
@@ -54,6 +72,8 @@ jobs:
           && startsWith(github.event.pull_request.head.ref, 'tagpr-from-'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      tag: ${{ steps.tagpr.outputs.tag }}
     permissions:
       contents: write
       pull-requests: write
